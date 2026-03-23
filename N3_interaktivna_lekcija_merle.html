@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Srpski · Nedelja 3 · Marle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --berry:#6D2E46;--rose:#A26769;--cream:#F5ECD7;--cream2:#EDE0CC;
+  --gold:#C4975A;--sage:#7A9E87;--dark:#2C1810;--mid:#7A5C5C;
+  --white:#fff;--blush:#E8C4C4;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);min-height:100vh;color:var(--dark)}
+.top-bar{background:var(--berry);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:52px;position:sticky;top:0;z-index:100}
+.top-bar-title{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--cream)}
+.top-bar .week{font-size:.75rem;color:#E8C4C4;font-weight:300}
+.progress-bar{height:3px;background:var(--gold);transition:width .4s ease;position:absolute;bottom:0;left:0}
+.stepper{display:flex;gap:6px;align-items:center}
+.step-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:all .2s;border:none;padding:0}
+.step-dot.active{background:var(--gold);transform:scale(1.3)}
+.step-dot.done{background:var(--sage)}
+.stage{max-width:860px;margin:0 auto;padding:1.5rem 1rem 5rem}
+.slide{display:none;animation:fadeIn .35s ease}
+.slide.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.slide-hero{text-align:center;padding:2.5rem 1rem}
+.slide-hero .num{font-size:3.5rem;font-family:'Playfair Display',serif;color:var(--berry);line-height:1;margin-bottom:.5rem}
+.slide-hero h2{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:600;color:var(--dark);margin-bottom:.6rem}
+.slide-hero p{color:var(--mid);font-size:1rem;line-height:1.7;max-width:520px;margin:0 auto 1.5rem}
+.hero-chips{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center}
+.chip{padding:.3rem .8rem;border-radius:20px;font-size:.8rem;font-weight:500}
+.chip-teal{background:#E1F5EE;color:#0F6E56}
+.chip-purple{background:#EEEDFE;color:#3C3489}
+.chip-pink{background:#FBEAF0;color:#72243E}
+.chip-amber{background:#FAEEDA;color:#633806}
+.chip-blue{background:#EBF5FB;color:#1A5276}
+.card{background:var(--white);border-radius:14px;padding:1.2rem 1.3rem;border:1px solid var(--blush)}
+.card h3{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--berry);margin-bottom:.7rem}
+.card-grid{display:grid;gap:1rem;margin-top:1rem}
+.card-grid.cols2{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.card-grid.cols3{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.ptable{width:100%;border-collapse:collapse;margin:.75rem 0;font-size:.9rem}
+.ptable th{background:var(--berry);color:var(--cream);padding:.55rem .8rem;text-align:left;font-weight:500;font-size:.8rem}
+.ptable td{padding:.5rem .8rem;border-bottom:1px solid var(--cream2)}
+.ptable tr:nth-child(even) td{background:var(--cream2)}
+.ptable .verb{font-weight:700;color:var(--berry)}
+.ptable .vb2{font-weight:700;color:#0E6655}
+.ptable .example{color:var(--mid);font-size:.83rem;font-style:italic}
+.reading-text{background:var(--white);border-radius:14px;padding:1.5rem 1.7rem;border:1px solid var(--blush);font-size:1.05rem;line-height:1.9}
+.reading-text p{margin-bottom:1rem}
+.reading-text p:last-child{margin-bottom:0}
+.hl-verb{font-weight:600;color:#0F6E56;border-bottom:2px solid #5DCAA5}
+.hl-time{font-weight:600;color:#633806;border-bottom:2px solid #EF9F27}
+.hl-season{font-weight:600;color:#3C3489;border-bottom:2px solid #AFA9EC}
+.hl-quest{font-weight:600;color:#72243E;border-bottom:2px solid #ED93B1}
+.trans-toggle{margin:1rem 0 .5rem;display:flex;gap:.5rem;flex-wrap:wrap}
+.ttbtn{font-size:.78rem;padding:.3rem .75rem;border-radius:20px;border:1px solid var(--blush);background:transparent;color:var(--mid);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+.ttbtn:hover,.ttbtn.on{background:var(--berry);color:var(--cream);border-color:var(--berry)}
+.trans-block{background:var(--cream2);border-radius:10px;padding:1rem 1.2rem;margin-top:.5rem;font-size:.9rem;line-height:1.7;color:var(--mid);display:none}
+.trans-block.show{display:block}
+.vocab-strip{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:.6rem;margin:.75rem 0}
+.vc{background:var(--white);border:1px solid var(--cream2);border-radius:10px;padding:.65rem .85rem}
+.vc .sr{font-weight:500;font-size:.95rem;color:var(--dark)}
+.vc .en{font-size:.78rem;color:var(--mid);margin-top:2px}
+.vc .de{font-size:.78rem;color:var(--rose)}
+.ex-block{background:var(--white);border-radius:14px;padding:1.4rem 1.5rem;border:1px solid var(--blush);margin-bottom:1rem}
+.ex-title{font-family:'Playfair Display',serif;font-size:1rem;color:var(--berry);margin-bottom:.3rem}
+.ex-instr{font-size:.85rem;color:var(--mid);margin-bottom:1rem;font-style:italic}
+.fill-row{display:grid;grid-template-columns:28px 1fr;gap:.5rem;align-items:baseline;margin-bottom:.6rem;font-size:.93rem}
+.fill-num{color:var(--rose);font-weight:500;text-align:right}
+.fill-sent{line-height:1.6}
+.fill-blank{display:inline-block;border:none;border-bottom:2px solid var(--blush);width:100px;text-align:center;font-family:'DM Sans',sans-serif;font-size:.93rem;color:var(--dark);background:transparent;outline:none;transition:border-color .2s}
+.fill-blank:focus{border-color:var(--berry)}
+.fill-blank.correct{border-color:var(--sage);color:#0F6E56}
+.fill-blank.wrong{border-color:#E24B4A;color:#E24B4A}
+.check-btn{margin-top:1rem;padding:.5rem 1.2rem;background:var(--berry);color:var(--cream);border:none;border-radius:20px;font-family:'DM Sans',sans-serif;font-size:.85rem;cursor:pointer;transition:opacity .15s}
+.check-btn:hover{opacity:.85}
+.feedback{margin-top:.75rem;font-size:.85rem;padding:.6rem 1rem;border-radius:8px;display:none}
+.feedback.show{display:block}
+.feedback.ok{background:#E1F5EE;color:#0F6E56}
+.feedback.nope{background:#FCEBEB;color:#A32D2D}
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.match-col{display:flex;flex-direction:column;gap:.5rem}
+.match-item{padding:.5rem .9rem;border-radius:8px;border:1.5px solid var(--blush);background:var(--cream2);font-size:.88rem;cursor:pointer;transition:all .2s;user-select:none;line-height:1.4}
+.match-item.selected{background:var(--berry);color:var(--cream);border-color:var(--berry)}
+.match-item.matched{background:var(--sage);color:var(--white);border-color:var(--sage);cursor:default}
+.match-item.wrong-flash{background:#FCEBEB;border-color:#E24B4A}
+.match-score{font-size:.85rem;color:var(--mid);margin-top:.75rem}
+.transl-row{margin-bottom:.9rem}
+.transl-en{font-size:.9rem;color:var(--mid);margin-bottom:.3rem}
+.transl-input{width:100%;padding:.45rem .7rem;border:1.5px solid var(--blush);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.9rem;background:transparent;color:var(--dark);outline:none;transition:border-color .2s}
+.transl-input:focus{border-color:var(--berry)}
+.transl-input.revealed{border-color:var(--sage);background:#E1F5EE;color:#0F6E56}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--cream2);padding:.7rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
+.nav-btn{padding:.55rem 1.3rem;border-radius:22px;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:500;cursor:pointer;transition:all .18s;border:none}
+.nav-prev{background:var(--cream2);color:var(--mid)}
+.nav-prev:hover{background:var(--blush)}
+.nav-next{background:var(--berry);color:var(--cream)}
+.nav-next:hover{opacity:.88}
+.slide-counter{font-size:.82rem;color:var(--mid)}
+.sec-hdr{display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem}
+.sec-icon{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;color:var(--white)}
+.bg-berry{background:var(--berry)}
+.bg-sage{background:var(--sage)}
+.bg-gold{background:var(--gold)}
+.bg-rose{background:var(--rose)}
+.bg-teal{background:#0E6655}
+.sec-hdr-text h2{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--dark)}
+.sec-hdr-text p{font-size:.83rem;color:var(--mid)}
+.tip{background:#EEEDFE;border-left:3px solid #7F77DD;border-radius:0 10px 10px 0;padding:.7rem 1rem;font-size:.85rem;color:#3C3489;margin:1rem 0;line-height:1.6}
+.tip-gold{background:#FAEEDA;border-left:3px solid #EF9F27;border-radius:0 10px 10px 0;padding:.7rem 1rem;font-size:.85rem;color:#633806;margin:1rem 0;line-height:1.6}
+.tip-green{background:#EAFAF1;border-left:3px solid #1D9E75;border-radius:0 10px 10px 0;padding:.7rem 1rem;font-size:.85rem;color:#0E6655;margin:1rem 0;line-height:1.6}
+.legend{display:flex;flex-wrap:wrap;gap:.6rem;margin:.5rem 0 1rem;align-items:center}
+.leg{display:flex;align-items:center;gap:4px;font-size:.77rem;color:var(--mid)}
+.leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.season-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.8rem;margin-top:.75rem}
+.season-card{border-radius:12px;padding:1rem 1.1rem;border:1px solid rgba(0,0,0,.08)}
+.congrats{text-align:center;padding:3rem 1rem}
+.congrats .big{font-family:'Playfair Display',serif;font-size:2.5rem;color:var(--berry);margin-bottom:.5rem}
+.congrats p{color:var(--mid);font-size:1rem;max-width:440px;margin:0 auto 1.5rem}
+.done-list{list-style:none;max-width:400px;margin:0 auto;text-align:left}
+.done-list li{display:flex;gap:.6rem;align-items:flex-start;margin-bottom:.55rem;font-size:.9rem}
+.done-list .chk{color:var(--sage);font-size:1rem;flex-shrink:0;margin-top:2px}
+.months-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.5rem;margin-top:.75rem}
+.month-pill{background:var(--white);border:1px solid var(--cream2);border-radius:10px;padding:.5rem .75rem;text-align:center}
+.month-pill .sr{font-weight:500;font-size:.95rem}
+.month-pill .en{font-size:.75rem;color:var(--mid);margin-top:1px}
+.quiz-word{display:flex;align-items:center;gap:.6rem;margin-bottom:.65rem}
+.quiz-word .word{font-weight:500;font-size:.95rem;min-width:140px}
+.quiz-input{flex:1;padding:.3rem .6rem;border:1.5px solid var(--blush);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.9rem;background:transparent;color:var(--dark);outline:none}
+.quiz-input:focus{border-color:var(--berry)}
+.quiz-input.correct{border-color:var(--sage);background:#E1F5EE;color:#0F6E56}
+.quiz-input.wrong{border-color:#E24B4A;background:#FCEBEB;color:#A32D2D}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div>
+    <div class="top-bar-title">Srpski · Nedelja 3</div>
+    <div class="week">Prezent glagola · Meseci · Godišnja doba · Pitanja</div>
+  </div>
+  <div class="stepper" id="stepper"></div>
+  <div class="progress-bar" id="pbar"></div>
+</div>
+
+<div class="stage" id="stage">
+
+<!-- 0: WELCOME -->
+<div class="slide active" id="s0">
+  <div class="slide-hero">
+    <div class="num">3</div>
+    <h2>Dobrodošla, Marle! 🌸</h2>
+    <p>Danas naučavaš <strong>prezent glagola</strong> — sada možeš da kažeš šta radiš, gde živiš, šta voliš. Srpski postaje živ!</p>
+    <div class="hero-chips">
+      <span class="chip chip-teal">🔑 Prezent glagola</span>
+      <span class="chip chip-amber">📅 Meseci & godišnja doba</span>
+      <span class="chip chip-purple">⏱️ Vremenski izrazi</span>
+      <span class="chip chip-pink">❓ Gde / Kada / Šta</span>
+    </div>
+  </div>
+  <div class="tip">💡 <strong>Danas:</strong> 5 lekcijskih slajdova + tekst za čitanje + 4 vežbe. Kreni kada budeš spremna!</div>
+  <div class="tip-gold">🇩🇪 <strong>Dobra vest za tebe:</strong> Srpski prezent liči na nemački! <em>govorim ≈ spreche · govoriš ≈ sprichst · govori ≈ spricht</em></div>
+</div>
+
+<!-- 1: PREZENT -ati -->
+<div class="slide" id="s1">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-berry">🔑</div>
+    <div class="sec-hdr-text"><h2>Prezent glagola Tip 1 — (-ati)</h2><p>Nastavci za glagole koji završavaju na -ati</p></div>
+  </div>
+  <table class="ptable">
+    <tr><th>Lice</th><th>pevati (to sing)</th><th>čitati (to read)</th><th>slušati (to listen)</th><th>Nastavak</th></tr>
+    <tr><td>ja</td><td class="verb">pevam</td><td class="verb">čitam</td><td class="verb">slušam</td><td style="color:var(--berry);font-weight:600">-am</td></tr>
+    <tr><td>ti</td><td class="verb">pevaš</td><td class="verb">čitaš</td><td class="verb">slušaš</td><td style="color:var(--berry);font-weight:600">-aš</td></tr>
+    <tr><td>on/ona</td><td class="verb">peva</td><td class="verb">čita</td><td class="verb">sluša</td><td style="color:var(--berry);font-weight:600">-a</td></tr>
+    <tr><td>mi</td><td class="verb">pevamo</td><td class="verb">čitamo</td><td class="verb">slušamo</td><td style="color:var(--berry);font-weight:600">-amo</td></tr>
+    <tr><td>vi</td><td class="verb">pevate</td><td class="verb">čitate</td><td class="verb">slušate</td><td style="color:var(--berry);font-weight:600">-ate</td></tr>
+    <tr><td>oni</td><td class="verb">pevaju</td><td class="verb">čitaju</td><td class="verb">slušaju</td><td style="color:var(--berry);font-weight:600">-aju</td></tr>
+  </table>
+  <div class="tip-gold">✂️ <strong>Formula:</strong> uzmi koren (pev-) + dodaj nastavak (-am, -aš, -a, -amo, -ate, -aju)</div>
+  <div class="tip-green">✅ <strong>Isti tip:</strong> gledati (gledam), putovati* (putujem*), pevati (pevam), čitati (čitam), slušati (slušam), govoriti*</div>
+  <div class="tip">⚠️ <strong>putovati je poseban:</strong> putujem · putuješ · putuje · putujemo · putujete · putuju (ne "putovam"!)</div>
+</div>
+
+<!-- 2: PREZENT -iti/-eti -->
+<div class="slide" id="s2">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-teal">🔑</div>
+    <div class="sec-hdr-text"><h2>Prezent glagola Tip 2 — (-iti / -eti)</h2><p>Nastavci za glagole koji završavaju na -iti ili -eti</p></div>
+  </div>
+  <table class="ptable">
+    <tr><th>Lice</th><th>govoriti (to speak)</th><th>živeti (to live)</th><th>voleti (to love)</th><th>Nastavak</th></tr>
+    <tr><td>ja</td><td class="vb2">govorim</td><td class="vb2">živim</td><td class="vb2">volim</td><td style="color:#0E6655;font-weight:600">-im</td></tr>
+    <tr><td>ti</td><td class="vb2">govoriš</td><td class="vb2">živiš</td><td class="vb2">voliš</td><td style="color:#0E6655;font-weight:600">-iš</td></tr>
+    <tr><td>on/ona</td><td class="vb2">govori</td><td class="vb2">živi</td><td class="vb2">voli</td><td style="color:#0E6655;font-weight:600">-i</td></tr>
+    <tr><td>mi</td><td class="vb2">govorimo</td><td class="vb2">živimo</td><td class="vb2">volimo</td><td style="color:#0E6655;font-weight:600">-imo</td></tr>
+    <tr><td>vi</td><td class="vb2">govorite</td><td class="vb2">živite</td><td class="vb2">volite</td><td style="color:#0E6655;font-weight:600">-ite</td></tr>
+    <tr><td>oni</td><td class="vb2">govore</td><td class="vb2">žive</td><td class="vb2">vole</td><td style="color:#0E6655;font-weight:600">-e</td></tr>
+  </table>
+  <div class="tip-gold">✂️ <strong>Formula:</strong> uzmi koren (govor-) + dodaj nastavak (-im, -iš, -i, -imo, -ite, -e)</div>
+  <div class="tip">🇩🇪 <strong>Nemačka paralela:</strong> sprechen → spreche/sprichst/spricht ≈ govoriti → govorim/govoriš/govori. Isti sistem!</div>
+  <div class="card" style="margin-top:1rem">
+    <h3 style="font-size:.95rem;margin-bottom:.6rem">📋 Ključni glagoli — zapamti ih sve!</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.5rem;font-size:.88rem">
+      <div><strong>govorim</strong> — I speak</div><div><strong>živim</strong> — I live</div>
+      <div><strong>učim</strong> — I study</div><div><strong>radim</strong> — I work/do</div>
+      <div><strong>volim</strong> — I love/like</div><div><strong>čitam</strong> — I read</div>
+      <div><strong>slušam</strong> — I listen</div><div><strong>gledam</strong> — I watch</div>
+      <div><strong>pevam</strong> — I sing</div><div><strong>putujem</strong> — I travel</div>
+      <div><strong>pišem</strong> — I write*</div><div><strong>vidim</strong> — I see</div>
+    </div>
+    <p style="font-size:.78rem;color:var(--mid);margin-top:.6rem;font-style:italic">* pisati → pišem (koren se menja: pis→piš) — izuzetak!</p>
+  </div>
+</div>
+
+<!-- 3: MESECI + GODIŠNJA DOBA -->
+<div class="slide" id="s3">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-gold">📅</div>
+    <div class="sec-hdr-text"><h2>Meseci i godišnja doba</h2><p>Months & seasons — with usage phrases</p></div>
+  </div>
+  <div class="months-grid">
+    <div class="month-pill" style="border-top:3px solid #22c55e"><div class="sr">januar</div><div class="en">January</div></div>
+    <div class="month-pill" style="border-top:3px solid #22c55e"><div class="sr">februar</div><div class="en">February</div></div>
+    <div class="month-pill" style="border-top:3px solid #22c55e"><div class="sr">mart</div><div class="en">March</div></div>
+    <div class="month-pill" style="border-top:3px solid #f97316"><div class="sr">april</div><div class="en">April</div></div>
+    <div class="month-pill" style="border-top:3px solid #f97316"><div class="sr">maj</div><div class="en">May</div></div>
+    <div class="month-pill" style="border-top:3px solid #f97316"><div class="sr">jun</div><div class="en">June</div></div>
+    <div class="month-pill" style="border-top:3px solid #eab308"><div class="sr">jul</div><div class="en">July</div></div>
+    <div class="month-pill" style="border-top:3px solid #eab308"><div class="sr">avgust</div><div class="en">August</div></div>
+    <div class="month-pill" style="border-top:3px solid #eab308"><div class="sr">septembar</div><div class="en">September</div></div>
+    <div class="month-pill" style="border-top:3px solid #6366f1"><div class="sr">oktobar</div><div class="en">October</div></div>
+    <div class="month-pill" style="border-top:3px solid #6366f1"><div class="sr">novembar</div><div class="en">November</div></div>
+    <div class="month-pill" style="border-top:3px solid #6366f1"><div class="sr">decembar</div><div class="en">December</div></div>
+  </div>
+  <div class="tip">💡 Meseci su svi <strong>muškog roda</strong> i ne pišu se velikim slovom! "U januaru" = "in January"</div>
+  <div class="season-grid" style="margin-top:1rem">
+    <div class="season-card" style="background:#EAFAF1;border-color:#22c55e">
+      <div style="font-weight:600;color:#065f46;font-size:1.05rem">🌸 Proleće</div>
+      <div style="font-size:.8rem;color:#065f46">spring · mart–maj</div>
+      <div style="font-size:.85rem;color:#374151;margin-top:.4rem;font-style:italic">"U proleće cveta cveće."</div>
+    </div>
+    <div class="season-card" style="background:#FEFCE8;border-color:#eab308">
+      <div style="font-weight:600;color:#713f12;font-size:1.05rem">☀️ Leto</div>
+      <div style="font-size:.8rem;color:#713f12">summer · jun–avg</div>
+      <div style="font-size:.85rem;color:#374151;margin-top:.4rem;font-style:italic">"<strong>Leti</strong> putujem u Srbiju!"</div>
+    </div>
+    <div class="season-card" style="background:#FFF7ED;border-color:#f97316">
+      <div style="font-weight:600;color:#9a3412;font-size:1.05rem">🍂 Jesen</div>
+      <div style="font-size:.8rem;color:#9a3412">autumn · sep–nov</div>
+      <div style="font-size:.85rem;color:#374151;margin-top:.4rem;font-style:italic">"Jesen je moja omiljena."</div>
+    </div>
+    <div class="season-card" style="background:#EFF6FF;border-color:#6366f1">
+      <div style="font-weight:600;color:#1e40af;font-size:1.05rem">❄️ Zima</div>
+      <div style="font-size:.8rem;color:#1e40af">winter · dec–feb</div>
+      <div style="font-size:.85rem;color:#374151;margin-top:.4rem;font-style:italic">"<strong>Zimi</strong> pada sneg."</div>
+    </div>
+  </div>
+  <div class="tip" style="margin-top:1rem">💡 <strong>Leti / Zimi</strong> = in summer / in winter (prilog, ne menja se!) · <strong>U proleće / U jesen</strong> = in spring / in autumn</div>
+</div>
+
+<!-- 4: VREMENSKI IZRAZI + PITANJA -->
+<div class="slide" id="s4">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-rose">⏱️</div>
+    <div class="sec-hdr-text"><h2>Vremenski izrazi i pitanja</h2><p>Time expressions + Gde / Kada / Šta / Zašto</p></div>
+  </div>
+  <div class="card-grid cols2">
+    <div class="card">
+      <h3>⏱️ Vremenski izrazi</h3>
+      <table class="ptable" style="margin-top:.5rem">
+        <tr><th>Srpski</th><th>English</th><th>Deutsch</th></tr>
+        <tr><td><strong style="color:var(--berry)">juče</strong></td><td>yesterday</td><td>gestern</td></tr>
+        <tr><td><strong style="color:var(--berry)">danas</strong></td><td>today</td><td>heute</td></tr>
+        <tr><td><strong style="color:var(--berry)">sutra</strong></td><td>tomorrow</td><td>morgen</td></tr>
+        <tr><td><strong style="color:var(--berry)">sada</strong></td><td>now</td><td>jetzt</td></tr>
+        <tr><td><strong style="color:var(--berry)">uvek</strong></td><td>always</td><td>immer</td></tr>
+        <tr><td><strong style="color:var(--berry)">često</strong></td><td>often</td><td>oft</td></tr>
+        <tr><td><strong style="color:var(--berry)">ponekad</strong></td><td>sometimes</td><td>manchmal</td></tr>
+        <tr><td><strong style="color:var(--berry)">nikad</strong></td><td>never</td><td>nie</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>❓ Pitanja — Questions</h3>
+      <div style="display:flex;flex-direction:column;gap:.65rem;margin-top:.5rem">
+        <div style="background:var(--cream2);border-radius:8px;padding:.6rem .8rem">
+          <div style="font-weight:600;color:var(--berry);font-size:.95rem">Gde...?</div>
+          <div style="font-size:.82rem;color:var(--mid)">Where? / Wo?</div>
+          <div style="font-size:.88rem;font-style:italic;margin-top:.3rem">"<strong>Gde</strong> živiš? — Živim u Berlinu."</div>
+        </div>
+        <div style="background:var(--cream2);border-radius:8px;padding:.6rem .8rem">
+          <div style="font-weight:600;color:var(--berry);font-size:.95rem">Kada...?</div>
+          <div style="font-size:.82rem;color:var(--mid)">When? / Wann?</div>
+          <div style="font-size:.88rem;font-style:italic;margin-top:.3rem">"<strong>Kada</strong> putuješ? — Putujem u julu."</div>
+        </div>
+        <div style="background:var(--cream2);border-radius:8px;padding:.6rem .8rem">
+          <div style="font-weight:600;color:var(--berry);font-size:.95rem">Šta radiš?</div>
+          <div style="font-size:.82rem;color:var(--mid)">What are you doing? / Was machst du?</div>
+          <div style="font-size:.88rem;font-style:italic;margin-top:.3rem">"<strong>Šta</strong> voliš? — Volim srpsku muziku."</div>
+        </div>
+        <div style="background:var(--cream2);border-radius:8px;padding:.6rem .8rem">
+          <div style="font-weight:600;color:var(--berry);font-size:.95rem">Zašto...?</div>
+          <div style="font-size:.82rem;color:var(--mid)">Why? / Warum?</div>
+          <div style="font-size:.88rem;font-style:italic;margin-top:.3rem">"<strong>Zašto</strong> učiš srpski? — Jer volim Srbiju!"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 5: TEKST ZA ČITANJE -->
+<div class="slide" id="s5">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-sage">📖</div>
+    <div class="sec-hdr-text"><h2>Tekst za čitanje</h2><p>Moj dan u Berlinu · A1–A2 · ~140 reči</p></div>
+  </div>
+  <div class="legend">
+    <span class="leg"><span class="leg-dot" style="background:#1D9E75"></span>Prezent glagola</span>
+    <span class="leg"><span class="leg-dot" style="background:#BA7517"></span>Vremenski izraz</span>
+    <span class="leg"><span class="leg-dot" style="background:#534AB7"></span>Godišnje doba/mesec</span>
+    <span class="leg"><span class="leg-dot" style="background:#D4537E"></span>Pitanje</span>
+  </div>
+  <div class="trans-toggle">
+    <span style="font-size:.8rem;color:var(--mid);line-height:26px;margin-right:4px">Prevod:</span>
+    <button class="ttbtn" onclick="toggleTrans('en',this)">🇬🇧 English</button>
+    <button class="ttbtn" onclick="toggleTrans('de',this)">🇩🇪 Deutsch</button>
+  </div>
+  <div class="reading-text">
+    <p>Zovem se Marle i <span class="hl-verb">živim</span> u Berlinu. <span class="hl-time">Svaki dan</span> <span class="hl-verb">učim</span> srpski jer <span class="hl-verb">volim</span> srpsku kulturu i muziku. <span class="hl-quest">Zašto</span> <span class="hl-verb">učim</span> srpski? Jer <span class="hl-verb">imam</span> prijatelje u Srbiji i <span class="hl-time">ponekad</span> <span class="hl-verb">putujem</span> u Beograd.</p>
+    <p><span class="hl-time">Ujutru</span> <span class="hl-verb">čitam</span> srpski tekst. <span class="hl-time">Uveče</span> <span class="hl-verb">slušam</span> srpske pesme. <span class="hl-time">Uvek</span> <span class="hl-verb">pevam</span> dok <span class="hl-verb">kuham</span>! Moj brat Max <span class="hl-time">često</span> <span class="hl-verb">kaže</span>: "<span class="hl-quest">Zašto</span> <span class="hl-verb">pevujiš</span> na srpskom?" Ali ja <span class="hl-time">nikad</span> ne <span class="hl-verb">prestajem</span>.</p>
+    <p><span class="hl-quest">Kada</span> <span class="hl-verb">putujem</span> u Srbiju? <span class="hl-time">Obično</span> <span class="hl-season">leti</span>, u <span class="hl-season">julu ili avgustu</span>. <span class="hl-season">U proleće</span> nije uvek moguće jer <span class="hl-verb">radim</span> mnogo. <span class="hl-season">Jesen</span> je moje omiljeno godišnje doba — <span class="hl-verb">volim</span> <span class="hl-season">oktobar</span> u Srbiji.</p>
+    <p><span class="hl-quest">Šta</span> <span class="hl-verb">radim</span> <span class="hl-time">sutra</span>? <span class="hl-verb">Učim</span> srpski sa Jasnom! <span class="hl-time">Danas</span> <span class="hl-verb">govorim</span> srpski bolje nego <span class="hl-time">juče</span>. I <span class="hl-time">sutra</span> — još bolje! 🌸</p>
+  </div>
+  <div class="trans-block" id="trans-en">
+    <div style="display:flex;gap:.6rem"><span style="font-size:1rem">🇬🇧</span><span>My name is Marle and I live in Berlin. Every day I study Serbian because I love Serbian culture and music. Why do I study Serbian? Because I have friends in Serbia and sometimes I travel to Belgrade.<br><br>In the morning I read a Serbian text. In the evening I listen to Serbian songs. I always sing while cooking! My brother Max often says: "Why are you humming in Serbian?" But I never stop.<br><br>When do I travel to Serbia? Usually in summer, in July or August. In spring it's not always possible because I work a lot. Autumn is my favourite season — I love October in Serbia.<br><br>What am I doing tomorrow? Studying Serbian with Jasna! Today I speak Serbian better than yesterday. And tomorrow — even better! 🌸</span></div>
+  </div>
+  <div class="trans-block" id="trans-de">
+    <div style="display:flex;gap:.6rem"><span style="font-size:1rem">🇩🇪</span><span>Ich heiße Marle und ich wohne in Berlin. Jeden Tag lerne ich Serbisch, weil ich die serbische Kultur und Musik liebe. Warum lerne ich Serbisch? Weil ich Freunde in Serbien habe und manchmal nach Belgrad reise.<br><br>Morgens lese ich einen serbischen Text. Abends höre ich serbische Lieder. Ich singe immer beim Kochen! Mein Bruder Max sagt oft: "Warum summst du auf Serbisch?" Aber ich höre nie auf.<br><br>Wann reise ich nach Serbien? Meistens im Sommer, im Juli oder August. Im Frühling ist es nicht immer möglich, weil ich viel arbeite. Herbst ist meine Lieblingsjahreszeit — ich liebe den Oktober in Serbien.<br><br>Was mache ich morgen? Serbisch lernen mit Jasna! Heute spreche ich Serbisch besser als gestern. Und morgen — noch besser! 🌸</span></div>
+  </div>
+</div>
+
+<!-- 6: VEŽBA 1 — KONJUGACIJA -->
+<div class="slide" id="s6">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-berry">✏️</div>
+    <div class="sec-hdr-text"><h2>Vežba 1 — Konjugacija</h2><p>Stavi glagol u tačan oblik prezenta</p></div>
+  </div>
+  <div class="ex-block">
+    <div class="ex-title">Stavi glagol u zagradi u tačan oblik</div>
+    <div class="ex-instr">Pazi na tip glagola (-ati → -am, -iti → -im, -ovati → -ujem)</div>
+    <div id="fill-form">
+      <div class="fill-row"><span class="fill-num">1.</span><span class="fill-sent">Ja <input class="fill-blank" id="f1" data-ans="govorim" placeholder="___"> (govoriti) srpski.</span></div>
+      <div class="fill-row"><span class="fill-num">2.</span><span class="fill-sent">Ti <input class="fill-blank" id="f2" data-ans="živiš" placeholder="___"> (živeti) u Berlinu.</span></div>
+      <div class="fill-row"><span class="fill-num">3.</span><span class="fill-sent">Ona <input class="fill-blank" id="f3" data-ans="uči" placeholder="___"> (učiti) srpski.</span></div>
+      <div class="fill-row"><span class="fill-num">4.</span><span class="fill-sent">Mi <input class="fill-blank" id="f4" data-ans="volimo" placeholder="___"> (voleti) srpsku muziku.</span></div>
+      <div class="fill-row"><span class="fill-num">5.</span><span class="fill-sent">Oni <input class="fill-blank" id="f5" data-ans="putuju" placeholder="___"> (putovati) u Beograd.</span></div>
+      <div class="fill-row"><span class="fill-num">6.</span><span class="fill-sent">Ja uvek <input class="fill-blank" id="f6" data-ans="slušam" placeholder="___"> (slušati) muziku.</span></div>
+      <div class="fill-row"><span class="fill-num">7.</span><span class="fill-sent">Ti <input class="fill-blank" id="f7" data-ans="čitaš" placeholder="___"> (čitati) srpske knjige ponekad.</span></div>
+      <div class="fill-row"><span class="fill-num">8.</span><span class="fill-sent">On <input class="fill-blank" id="f8" data-ans="radi" placeholder="___"> (raditi) u Hamburgu.</span></div>
+    </div>
+    <button class="check-btn" onclick="checkFill()">Proveri odgovore ✓</button>
+    <div class="feedback" id="fill-fb"></div>
+  </div>
+</div>
+
+<!-- 7: VEŽBA 2 — MESECI QUIZ -->
+<div class="slide" id="s7">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-gold">📅</div>
+    <div class="sec-hdr-text"><h2>Vežba 2 — Meseci!</h2><p>Napiši srpski naziv za svaki mesec</p></div>
+  </div>
+  <div class="ex-block">
+    <div class="ex-title">Prevedi mesec na srpski</div>
+    <div class="ex-instr">Piši bez velikih slova — meseci se u srpskom pišu malim slovom!</div>
+    <div id="month-form">
+      <div class="quiz-word"><span class="word">January</span><input class="quiz-input" id="m1" data-ans="januar" placeholder="___"><span id="mf1" style="font-size:.8rem;color:var(--sage);margin-left:.4rem;display:none">✓</span></div>
+      <div class="quiz-word"><span class="word">March</span><input class="quiz-input" id="m2" data-ans="mart" placeholder="___"><span id="mf2" style="font-size:.8rem;color:var(--sage);margin-left:.4rem;display:none">✓</span></div>
+      <div class="quiz-word"><span class="word">June</span><input class="quiz-input" id="m3" data-ans="jun" placeholder="___"><span id="mf3" style="font-size:.8rem;color:var(--sage);margin-left:.4rem;display:none">✓</span></div>
+      <div class="quiz-word"><span class="word">July</span><input class="quiz-input" id="m4" data-ans="jul" placeholder="___"><span id="mf4" style="font-size:.8rem;color:var(--sage);margin-left:.4rem;display:none">✓</span></div>
+      <div class="quiz-word"><span class="word">October</span><input class="quiz-input" id="m5" data-ans="oktobar" placeholder="___"><span id="mf5" style="font-size:.8rem;color:var(--sage);margin-left:.4rem;display:none">✓</span></div>
+      <div class="quiz-word"><span class="word">December</span><input class="quiz-input" id="m6" data-ans="decembar" placeholder="___"><span id="mf6" style="font-size:.8rem;color:var(--sage);margin-left:.4rem;display:none">✓</span></div>
+      <div class="quiz-word"><span class="word">August</span><input class="quiz-input" id="m7" data-ans="avgust" placeholder="___"><span id="mf7" style="font-size:.8rem;color:var(--sage);margin-left:.4rem;display:none">✓</span></div>
+      <div class="quiz-word"><span class="word">November</span><input class="quiz-input" id="m8" data-ans="novembar" placeholder="___"><span id="mf8" style="font-size:.8rem;color:var(--sage);margin-left:.4rem;display:none">✓</span></div>
+    </div>
+    <button class="check-btn" onclick="checkMonths()">Proveri ✓</button>
+    <div class="feedback" id="month-fb"></div>
+  </div>
+</div>
+
+<!-- 8: VEŽBA 3 — SPOJI -->
+<div class="slide" id="s8">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-rose">🔗</div>
+    <div class="sec-hdr-text"><h2>Vežba 3 — Spoji!</h2><p>Spoji srpski vremenski izraz sa engleskim</p></div>
+  </div>
+  <div class="ex-block">
+    <div class="ex-title">Klikni srpsku reč, pa engleski prevod</div>
+    <div class="match-grid">
+      <div class="match-col" id="match-sr"></div>
+      <div class="match-col" id="match-en"></div>
+    </div>
+    <div class="match-score" id="match-score">0 / 8 spojeno</div>
+  </div>
+  <div class="tip">💡 Zapamti redosled: <em>juče → danas → sutra</em> = yesterday → today → tomorrow</div>
+</div>
+
+<!-- 9: VEŽBA 4 — PREVEDI -->
+<div class="slide" id="s9">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-sage">🌍</div>
+    <div class="sec-hdr-text"><h2>Vežba 4 — Prevedi na srpski</h2><p>Otkrij odgovor kad si gotova</p></div>
+  </div>
+  <div class="ex-block">
+    <div class="ex-title">Prevedi rečenice na srpski</div>
+    <div class="ex-instr">Fokus na tačan oblik prezenta!</div>
+    <div id="transl-form">
+      <div class="transl-row"><div class="transl-en">1. I speak Serbian and German.</div><input class="transl-input" id="t1" placeholder="Govorim..."><div class="feedback" id="tf1" style="margin-top:.4rem;font-size:.83rem;padding:.5rem .8rem"></div></div>
+      <div class="transl-row"><div class="transl-en">2. She lives in Belgrade.</div><input class="transl-input" id="t2" placeholder="Ona..."><div class="feedback" id="tf2" style="margin-top:.4rem;font-size:.83rem;padding:.5rem .8rem"></div></div>
+      <div class="transl-row"><div class="transl-en">3. I always listen to music.</div><input class="transl-input" id="t3" placeholder="Uvek..."><div class="feedback" id="tf3" style="margin-top:.4rem;font-size:.83rem;padding:.5rem .8rem"></div></div>
+      <div class="transl-row"><div class="transl-en">4. Where do you live?</div><input class="transl-input" id="t4" placeholder="Gde..."><div class="feedback" id="tf4" style="margin-top:.4rem;font-size:.83rem;padding:.5rem .8rem"></div></div>
+      <div class="transl-row"><div class="transl-en">5. We travel to Serbia in summer.</div><input class="transl-input" id="t5" placeholder="Leti..."><div class="feedback" id="tf5" style="margin-top:.4rem;font-size:.83rem;padding:.5rem .8rem"></div></div>
+    </div>
+    <button class="check-btn" onclick="revealAll()">Otkrij sve odgovore</button>
+  </div>
+</div>
+
+<!-- 10: KRAJ -->
+<div class="slide" id="s10">
+  <div class="congrats">
+    <div class="big">Odlično! 🌸</div>
+    <p>Završila si lekciju Nedelje 3. Srpski ti postaje sve prirodniji!</p>
+    <ul class="done-list">
+      <li><span class="chk">✓</span>Prezent -ati glagola (pevam, čitam, slušam...)</li>
+      <li><span class="chk">✓</span>Prezent -iti/-eti glagola (govorim, živim, volim...)</li>
+      <li><span class="chk">✓</span>putovati → putujem (poseban tip!)</li>
+      <li><span class="chk">✓</span>Svih 12 meseci napamet</li>
+      <li><span class="chk">✓</span>4 godišnja doba + leti/zimi/u proleće/u jesen</li>
+      <li><span class="chk">✓</span>Vremenski izrazi: uvek/često/ponekad/nikad/juče/danas/sutra</li>
+      <li><span class="chk">✓</span>Pitanja: Gde/Kada/Šta/Zašto</li>
+    </ul>
+    <div style="margin-top:1.5rem;padding:1rem 1.25rem;background:var(--cream2);border-radius:12px;max-width:420px;margin-left:auto;margin-right:auto">
+      <div style="font-size:.85rem;font-weight:500;color:var(--berry);margin-bottom:.5rem">Za kod kuće 🏠</div>
+      <div style="font-size:.83rem;color:var(--mid);line-height:1.7">📱 Anki Set 1+2+3 svaki dan<br>🎵 Zdravko Čolić — "Šta bi dao da si na mom mestu"<br>— podvuci sve glagole u prezentu!<br>✍️ Napiši 6-7 rečenica o svom svakodnevnom životu</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end stage -->
+
+<div class="bottom-nav">
+  <button class="nav-btn nav-prev" id="btn-prev" onclick="go(-1)">← Nazad</button>
+  <span class="slide-counter" id="counter">1 / 11</span>
+  <button class="nav-btn nav-next" id="btn-next" onclick="go(1)">Napred →</button>
+</div>
+
+<script>
+const TOTAL = 11;
+let cur = 0;
+const slides = Array.from(document.querySelectorAll('.slide'));
+const pbar = document.getElementById('pbar');
+const counter = document.getElementById('counter');
+const stepper = document.getElementById('stepper');
+
+for(let i = 0; i < TOTAL; i++){
+  const d = document.createElement('button');
+  d.className = 'step-dot' + (i === 0 ? ' active' : '');
+  d.onclick = (function(idx){ return function(){ jumpTo(idx); }; })(i);
+  stepper.appendChild(d);
+}
+
+function updateUI(){
+  slides.forEach((s, i) => s.classList.toggle('active', i === cur));
+  stepper.querySelectorAll('.step-dot').forEach((d, i) => {
+    d.classList.toggle('active', i === cur);
+    d.classList.toggle('done', i < cur);
+  });
+  pbar.style.width = ((cur / (TOTAL - 1)) * 100) + '%';
+  counter.textContent = (cur + 1) + ' / ' + TOTAL;
+  document.getElementById('btn-prev').style.visibility = cur === 0 ? 'hidden' : 'visible';
+  document.getElementById('btn-next').textContent = cur === TOTAL - 1 ? '🌸 Završi' : 'Napred →';
+  window.scrollTo(0, 0);
+}
+function go(dir){ cur = Math.max(0, Math.min(TOTAL - 1, cur + dir)); updateUI(); }
+function jumpTo(i){ cur = i; updateUI(); }
+updateUI();
+
+/* FILL EXERCISE */
+function checkFill(){
+  const inputs = document.querySelectorAll('#fill-form .fill-blank');
+  let ok = 0;
+  inputs.forEach(inp => {
+    const v = inp.value.trim().toLowerCase().replace(/š/g,'š').replace(/ž/g,'ž').replace(/č/g,'č').replace(/ć/g,'ć');
+    const a = inp.dataset.ans.toLowerCase();
+    if(v === a){ inp.classList.add('correct'); inp.classList.remove('wrong'); ok++; }
+    else if(v){ inp.classList.add('wrong'); inp.classList.remove('correct'); }
+  });
+  const fb = document.getElementById('fill-fb');
+  fb.className = 'feedback show ' + (ok === inputs.length ? 'ok' : 'nope');
+  fb.textContent = ok === inputs.length
+    ? 'Savršeno! Svi oblici tačni! 🎉'
+    : ok + ' / ' + inputs.length + ' tačno. Provjeri crvena polja.';
+}
+
+/* MONTHS EXERCISE */
+function checkMonths(){
+  let ok = 0;
+  for(let i = 1; i <= 8; i++){
+    const inp = document.getElementById('m'+i);
+    const v = inp.value.trim().toLowerCase();
+    const a = inp.dataset.ans;
+    const fb = document.getElementById('mf'+i);
+    if(v === a){ inp.classList.add('correct'); inp.classList.remove('wrong'); fb.style.display='inline'; ok++; }
+    else if(v){ inp.classList.add('wrong'); inp.classList.remove('correct'); fb.style.display='none'; }
+  }
+  const fb = document.getElementById('month-fb');
+  fb.className = 'feedback show ' + (ok === 8 ? 'ok' : 'nope');
+  fb.textContent = ok === 8
+    ? 'Bravo! Svi meseci tačni! 🗓️'
+    : ok + ' / 8 tačno.';
+}
+
+/* MATCH EXERCISE */
+const matchPairs = [
+  ['juče','yesterday'],['danas','today'],['sutra','tomorrow'],['sada','now'],
+  ['uvek','always'],['često','often'],['ponekad','sometimes'],['nikad','never']
+];
+let selSr = null, selEn = null, matched = 0;
+function shuffle(a){ return [...a].sort(() => Math.random() - .5); }
+shuffle([...matchPairs]).forEach(([s, e]) => {
+  const d = document.createElement('div');
+  d.className='match-item'; d.textContent=s; d.dataset.key=s;
+  d.onclick=function(){ pickSr(d); };
+  document.getElementById('match-sr').appendChild(d);
+});
+shuffle([...matchPairs]).forEach(([s, e]) => {
+  const d = document.createElement('div');
+  d.className='match-item'; d.textContent=e; d.dataset.key=s;
+  d.onclick=function(){ pickEn(d); };
+  document.getElementById('match-en').appendChild(d);
+});
+function pickSr(el){
+  if(el.classList.contains('matched')) return;
+  document.querySelectorAll('#match-sr .match-item').forEach(e=>e.classList.remove('selected'));
+  el.classList.add('selected'); selSr=el; if(selEn) tryMatch();
+}
+function pickEn(el){
+  if(el.classList.contains('matched')) return;
+  document.querySelectorAll('#match-en .match-item').forEach(e=>e.classList.remove('selected'));
+  el.classList.add('selected'); selEn=el; if(selSr) tryMatch();
+}
+function tryMatch(){
+  if(selSr.dataset.key===selEn.dataset.key){
+    [selSr,selEn].forEach(e=>{e.classList.add('matched');e.classList.remove('selected');});
+    matched++;
+    document.getElementById('match-score').textContent = matched===8
+      ? '🎉 Sve spojeno! Odlično!'
+      : matched+' / 8 spojeno';
+  } else {
+    [selSr,selEn].forEach(e=>{e.classList.add('wrong-flash');setTimeout(()=>e.classList.remove('wrong-flash','selected'),600);});
+  }
+  selSr=null; selEn=null;
+}
+
+/* TRANSLATE EXERCISE */
+const answers = {
+  t1:'Govorim srpski i nemački.',
+  t2:'Ona živi u Beogradu.',
+  t3:'Uvek slušam muziku.',
+  t4:'Gde živiš?',
+  t5:'Leti putujemo u Srbiju.'
+};
+function revealAll(){
+  Object.entries(answers).forEach(([id,ans])=>{
+    const inp=document.getElementById(id);
+    inp.value=''; inp.className='transl-input revealed';
+    const fb=document.getElementById('tf'+id.slice(1));
+    fb.className='feedback show ok'; fb.textContent='✓ '+ans;
+  });
+}
+
+/* TRANS TOGGLE */
+function toggleTrans(lang,btn){
+  const el=document.getElementById('trans-'+lang);
+  const isOn=el.classList.toggle('show');
+  btn.classList.toggle('on',isOn);
+}
+</script>
+</body>
+</html>
