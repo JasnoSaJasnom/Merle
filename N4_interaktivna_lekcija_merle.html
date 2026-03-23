@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Srpski · Nedelja 4 · Marle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --berry:#6D2E46;--rose:#A26769;--cream:#F5ECD7;--cream2:#EDE0CC;
+  --gold:#C4975A;--sage:#7A9E87;--dark:#2C1810;--mid:#7A5C5C;
+  --white:#fff;--blush:#E8C4C4;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);min-height:100vh;color:var(--dark)}
+.top-bar{background:var(--berry);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:52px;position:sticky;top:0;z-index:100}
+.top-bar-title{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--cream)}
+.week{font-size:.75rem;color:#E8C4C4;font-weight:300}
+.progress-bar{height:3px;background:var(--gold);transition:width .4s ease;position:absolute;bottom:0;left:0}
+.stepper{display:flex;gap:6px;align-items:center}
+.step-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:all .2s;border:none;padding:0}
+.step-dot.active{background:var(--gold);transform:scale(1.3)}
+.step-dot.done{background:var(--sage)}
+.stage{max-width:860px;margin:0 auto;padding:1.5rem 1rem 5rem}
+.slide{display:none;animation:fadeIn .35s ease}
+.slide.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.slide-hero{text-align:center;padding:2.5rem 1rem}
+.slide-hero .num{font-size:3.5rem;font-family:'Playfair Display',serif;color:var(--berry);line-height:1;margin-bottom:.5rem}
+.slide-hero h2{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:600;color:var(--dark);margin-bottom:.6rem}
+.slide-hero p{color:var(--mid);font-size:1rem;line-height:1.7;max-width:520px;margin:0 auto 1.5rem}
+.hero-chips{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center}
+.chip{padding:.3rem .8rem;border-radius:20px;font-size:.8rem;font-weight:500}
+.chip-teal{background:#E1F5EE;color:#0F6E56}
+.chip-purple{background:#EEEDFE;color:#3C3489}
+.chip-pink{background:#FBEAF0;color:#72243E}
+.chip-amber{background:#FAEEDA;color:#633806}
+.chip-blue{background:#EBF5FB;color:#1A5276}
+.chip-gold{background:#FEF3C7;color:#78350F}
+.card{background:var(--white);border-radius:14px;padding:1.2rem 1.3rem;border:1px solid var(--blush)}
+.card h3{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--berry);margin-bottom:.7rem}
+.card-grid{display:grid;gap:1rem;margin-top:1rem}
+.card-grid.cols2{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.card-grid.cols3{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.ptable{width:100%;border-collapse:collapse;margin:.75rem 0;font-size:.88rem}
+.ptable th{background:var(--berry);color:var(--cream);padding:.5rem .8rem;text-align:left;font-weight:500;font-size:.78rem}
+.ptable td{padding:.45rem .8rem;border-bottom:1px solid var(--cream2)}
+.ptable tr:nth-child(even) td{background:var(--cream2)}
+.ptable .vb{font-weight:700;color:var(--berry)}
+.ptable .vb2{font-weight:700;color:#1d4ed8}
+.ptable .vbred{font-weight:700;color:#991b1b}
+.ptable .ex{color:var(--mid);font-size:.82rem;font-style:italic}
+.reading-text{background:var(--white);border-radius:14px;padding:1.5rem 1.7rem;border:1px solid var(--blush);font-size:1.05rem;line-height:1.9}
+.reading-text p{margin-bottom:1rem}
+.reading-text p:last-child{margin-bottom:0}
+.hl-poss{font-weight:600;color:#1d4ed8;border-bottom:2px solid #93c5fd}
+.hl-akuz{font-weight:600;color:#991b1b;border-bottom:2px solid #fca5a5}
+.hl-move{font-weight:600;color:#0F6E56;border-bottom:2px solid #5DCAA5}
+.hl-conj{font-weight:600;color:#633806;border-bottom:2px solid #EF9F27}
+.hl-prof{font-weight:600;color:#3C3489;border-bottom:2px solid #AFA9EC}
+.trans-toggle{margin:1rem 0 .5rem;display:flex;gap:.5rem;flex-wrap:wrap}
+.ttbtn{font-size:.78rem;padding:.3rem .75rem;border-radius:20px;border:1px solid var(--blush);background:transparent;color:var(--mid);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+.ttbtn:hover,.ttbtn.on{background:var(--berry);color:var(--cream);border-color:var(--berry)}
+.trans-block{background:var(--cream2);border-radius:10px;padding:1rem 1.2rem;margin-top:.5rem;font-size:.9rem;line-height:1.7;color:var(--mid);display:none}
+.trans-block.show{display:block}
+.ex-block{background:var(--white);border-radius:14px;padding:1.4rem 1.5rem;border:1px solid var(--blush);margin-bottom:1rem}
+.ex-title{font-family:'Playfair Display',serif;font-size:1rem;color:var(--berry);margin-bottom:.3rem}
+.ex-instr{font-size:.85rem;color:var(--mid);margin-bottom:1rem;font-style:italic}
+.fill-row{display:grid;grid-template-columns:28px 1fr;gap:.5rem;align-items:baseline;margin-bottom:.6rem;font-size:.93rem}
+.fill-num{color:var(--rose);font-weight:500;text-align:right}
+.fill-blank{display:inline-block;border:none;border-bottom:2px solid var(--blush);width:110px;text-align:center;font-family:'DM Sans',sans-serif;font-size:.93rem;color:var(--dark);background:transparent;outline:none;transition:border-color .2s}
+.fill-blank:focus{border-color:var(--berry)}
+.fill-blank.correct{border-color:var(--sage);color:#0F6E56}
+.fill-blank.wrong{border-color:#E24B4A;color:#E24B4A}
+.check-btn{margin-top:1rem;padding:.5rem 1.2rem;background:var(--berry);color:var(--cream);border:none;border-radius:20px;font-family:'DM Sans',sans-serif;font-size:.85rem;cursor:pointer;transition:opacity .15s}
+.check-btn:hover{opacity:.85}
+.feedback{margin-top:.75rem;font-size:.85rem;padding:.6rem 1rem;border-radius:8px;display:none}
+.feedback.show{display:block}
+.feedback.ok{background:#E1F5EE;color:#0F6E56}
+.feedback.nope{background:#FCEBEB;color:#A32D2D}
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.match-col{display:flex;flex-direction:column;gap:.5rem}
+.match-item{padding:.5rem .9rem;border-radius:8px;border:1.5px solid var(--blush);background:var(--cream2);font-size:.88rem;cursor:pointer;transition:all .2s;user-select:none;line-height:1.4}
+.match-item.selected{background:var(--berry);color:var(--cream);border-color:var(--berry)}
+.match-item.matched{background:var(--sage);color:var(--white);border-color:var(--sage);cursor:default}
+.match-item.wrong-flash{background:#FCEBEB;border-color:#E24B4A}
+.match-score{font-size:.85rem;color:var(--mid);margin-top:.75rem}
+.transl-row{margin-bottom:.9rem}
+.transl-en{font-size:.9rem;color:var(--mid);margin-bottom:.3rem}
+.transl-input{width:100%;padding:.45rem .7rem;border:1.5px solid var(--blush);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.9rem;background:transparent;color:var(--dark);outline:none;transition:border-color .2s}
+.transl-input:focus{border-color:var(--berry)}
+.transl-input.revealed{border-color:var(--sage);background:#E1F5EE;color:#0F6E56}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--cream2);padding:.7rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
+.nav-btn{padding:.55rem 1.3rem;border-radius:22px;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:500;cursor:pointer;transition:all .18s;border:none}
+.nav-prev{background:var(--cream2);color:var(--mid)}
+.nav-prev:hover{background:var(--blush)}
+.nav-next{background:var(--berry);color:var(--cream)}
+.nav-next:hover{opacity:.88}
+.slide-counter{font-size:.82rem;color:var(--mid)}
+.sec-hdr{display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem}
+.sec-icon{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;color:var(--white)}
+.bg-berry{background:var(--berry)}
+.bg-sage{background:var(--sage)}
+.bg-gold{background:var(--gold)}
+.bg-rose{background:var(--rose)}
+.bg-blue{background:#1d4ed8}
+.bg-purple{background:#534AB7}
+.sec-hdr-text h2{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--dark)}
+.sec-hdr-text p{font-size:.83rem;color:var(--mid)}
+.tip{background:#EEEDFE;border-left:3px solid #7F77DD;border-radius:0 10px 10px 0;padding:.7rem 1rem;font-size:.85rem;color:#3C3489;margin:1rem 0;line-height:1.6}
+.tip-gold{background:#FAEEDA;border-left:3px solid #EF9F27;border-radius:0 10px 10px 0;padding:.7rem 1rem;font-size:.85rem;color:#633806;margin:1rem 0;line-height:1.6}
+.tip-green{background:#EAFAF1;border-left:3px solid #1D9E75;border-radius:0 10px 10px 0;padding:.7rem 1rem;font-size:.85rem;color:#0E6655;margin:1rem 0;line-height:1.6}
+.tip-red{background:#FCEBEB;border-left:3px solid #E24B4A;border-radius:0 10px 10px 0;padding:.7rem 1rem;font-size:.85rem;color:#991b1b;margin:1rem 0;line-height:1.6}
+.legend{display:flex;flex-wrap:wrap;gap:.6rem;margin:.5rem 0 1rem;align-items:center}
+.leg{display:flex;align-items:center;gap:4px;font-size:.77rem;color:var(--mid)}
+.leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.badge-m{display:inline-block;font-size:.7rem;font-weight:600;padding:1px 7px;border-radius:10px;background:#dbeafe;color:#1d4ed8;margin-left:4px}
+.badge-z{display:inline-block;font-size:.7rem;font-weight:600;padding:1px 7px;border-radius:10px;background:#fce7f3;color:#9d174d;margin-left:4px}
+.badge-sr{display:inline-block;font-size:.7rem;font-weight:600;padding:1px 7px;border-radius:10px;background:#d1fae5;color:#065f46;margin-left:4px}
+.poss-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.7rem;margin-top:.75rem}
+.poss-card{background:var(--white);border:1px solid var(--cream2);border-radius:10px;padding:.75rem 1rem}
+.poss-card .sr{font-weight:600;font-size:.95rem;color:var(--dark);margin-bottom:.35rem}
+.poss-forms{display:flex;gap:.4rem;flex-wrap:wrap}
+.pform{font-size:.82rem;padding:2px 8px;border-radius:8px;font-weight:500}
+.pform-m{background:#dbeafe;color:#1d4ed8}
+.pform-z{background:#fce7f3;color:#9d174d}
+.pform-sr{background:#d1fae5;color:#065f46}
+.conj-grid{display:flex;flex-direction:column;gap:.5rem;margin-top:.5rem}
+.conj-item{display:flex;align-items:flex-start;gap:.75rem;padding:.6rem .9rem;border-radius:10px;background:var(--cream2)}
+.conj-sr{font-weight:700;color:var(--berry);font-size:1rem;min-width:70px}
+.conj-en{font-size:.83rem;color:var(--mid);flex:1}
+.conj-ex{font-size:.85rem;font-style:italic;color:var(--dark);flex:2}
+.congrats{text-align:center;padding:3rem 1rem}
+.congrats .big{font-family:'Playfair Display',serif;font-size:2.5rem;color:var(--berry);margin-bottom:.5rem}
+.congrats p{color:var(--mid);font-size:1rem;max-width:460px;margin:0 auto 1.5rem}
+.done-list{list-style:none;max-width:420px;margin:0 auto;text-align:left}
+.done-list li{display:flex;gap:.6rem;align-items:flex-start;margin-bottom:.55rem;font-size:.9rem}
+.done-list .chk{color:var(--sage);font-size:1rem;flex-shrink:0;margin-top:2px}
+.phase-badge{display:inline-block;background:var(--berry);color:var(--cream);padding:.4rem 1.2rem;border-radius:20px;font-size:.9rem;font-weight:500;margin-bottom:1rem}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div>
+    <div class="top-bar-title">Srpski · Nedelja 4 · Faza 1 Finale 🎉</div>
+    <div class="week">Prisvojni pridevi · Akuzativ · Zanimanja · Kretanje · Veznici</div>
+  </div>
+  <div class="stepper" id="stepper"></div>
+  <div class="progress-bar" id="pbar"></div>
+</div>
+
+<div class="stage">
+
+<!-- 0: WELCOME -->
+<div class="slide active" id="s0">
+  <div class="slide-hero">
+    <div class="num">4</div>
+    <h2>Poslednja nedelja Faze 1! 🌸</h2>
+    <p>Ovo je <strong>finale</strong> — spajamo sve što si naučila u pune, bogate rečenice. Posle ove nedelje, Faza 1 je završena!</p>
+    <div class="hero-chips">
+      <span class="chip chip-blue">👤 Prisvojni pridevi (moj/tvoj...)</span>
+      <span class="chip chip-pink">📝 Akuzativ uvod</span>
+      <span class="chip chip-purple">💼 Zanimanja</span>
+      <span class="chip chip-teal">🚶 Glagoli kretanja</span>
+      <span class="chip chip-amber">🔗 Veznici (i/ali/jer...)</span>
+    </div>
+  </div>
+  <div class="tip">🇩🇪 <strong>Nemačka paralela — ova nedelja:</strong> moj/moja/moje = mein/meine/mein · Akuzativ = Akkusativ · Veznici = Konjunktionen</div>
+  <div class="tip-gold">🎯 <strong>Cilj ove nedelje:</strong> Da možeš opisati ceo dan u Srbiji u 8+ rečenica sa veznicima!</div>
+</div>
+
+<!-- 1: PRISVOJNI PRIDEVI -->
+<div class="slide" id="s1">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-blue">👤</div>
+    <div class="sec-hdr-text"><h2>Prisvojni pridevi — Possessives</h2><p>Moj/tvoj/njegov/njen — prate rod imenice!</p></div>
+  </div>
+  <div class="poss-grid">
+    <div class="poss-card"><div class="sr">moj (my)</div><div class="poss-forms"><span class="pform pform-m">moj (M)</span><span class="pform pform-z">moja (Ž)</span><span class="pform pform-sr">moje (Sr)</span></div><div style="font-size:.8rem;color:var(--mid);margin-top:.4rem;font-style:italic">Moj brat · Moja sestra · Moje dete</div></div>
+    <div class="poss-card"><div class="sr">tvoj (your)</div><div class="poss-forms"><span class="pform pform-m">tvoj (M)</span><span class="pform pform-z">tvoja (Ž)</span><span class="pform pform-sr">tvoje (Sr)</span></div><div style="font-size:.8rem;color:var(--mid);margin-top:.4rem;font-style:italic">Tvoj pas · Tvoja kuća · Tvoje ime</div></div>
+    <div class="poss-card"><div class="sr">njegov (his)</div><div class="poss-forms"><span class="pform pform-m">njegov (M)</span><span class="pform pform-z">njegova (Ž)</span><span class="pform pform-sr">njegovo (Sr)</span></div><div style="font-size:.8rem;color:var(--mid);margin-top:.4rem;font-style:italic">Njegov posao · Njegova mama</div></div>
+    <div class="poss-card"><div class="sr">njen (her)</div><div class="poss-forms"><span class="pform pform-m">njen (M)</span><span class="pform pform-z">njena (Ž)</span><span class="pform pform-sr">njeno (Sr)</span></div><div style="font-size:.8rem;color:var(--mid);margin-top:.4rem;font-style:italic">Njen brat · Njena prijateljica</div></div>
+    <div class="poss-card"><div class="sr">naš (our)</div><div class="poss-forms"><span class="pform pform-m">naš (M)</span><span class="pform pform-z">naša (Ž)</span><span class="pform pform-sr">naše (Sr)</span></div><div style="font-size:.8rem;color:var(--mid);margin-top:.4rem;font-style:italic">Naš grad · Naša zemlja</div></div>
+    <div class="poss-card"><div class="sr">vaš (your pl.)</div><div class="poss-forms"><span class="pform pform-m">vaš (M)</span><span class="pform pform-z">vaša (Ž)</span><span class="pform pform-sr">vaše (Sr)</span></div><div style="font-size:.8rem;color:var(--mid);margin-top:.4rem;font-style:italic">Vaš profesor · Vaša škola</div></div>
+    <div class="poss-card" style="grid-column:1/-1"><div class="sr">njihov (their)</div><div class="poss-forms"><span class="pform pform-m">njihov (M)</span><span class="pform pform-z">njihova (Ž)</span><span class="pform pform-sr">njihovo (Sr)</span></div><div style="font-size:.8rem;color:var(--mid);margin-top:.4rem;font-style:italic">Njihov stan · Njihova deca · Njihovo selo</div></div>
+  </div>
+  <div class="tip">🇩🇪 <strong>Ista logika kao u nema&#269;kom:</strong> mein Bruder / meine Schwester / mein Kind = moj brat / moja sestra / moje dete</div>
+</div>
+
+<!-- 2: AKUZATIV -->
+<div class="slide" id="s2">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-rose">📝</div>
+    <div class="sec-hdr-text"><h2>Akuzativ — The object case</h2><p>Koga/šta imam · volim · vidim · slušam?</p></div>
+  </div>
+  <div class="card-grid cols2" style="margin-bottom:1rem">
+    <div class="card" style="border-top:3px solid #3b82f6">
+      <div style="font-size:.85rem;font-weight:600;color:#1d4ed8;margin-bottom:.5rem">NOMINATIV — Ko/Šta vrši radnju</div>
+      <div style="font-size:1rem;margin-bottom:.3rem"><strong>Brat</strong> radi. <span style="color:#3b82f6;font-size:.8rem">← subjekat</span></div>
+      <div style="font-size:1rem;margin-bottom:.3rem"><strong>Sestra</strong> peva.</div>
+      <div style="font-size:.8rem;color:var(--mid);font-style:italic;margin-top:.5rem">Ko? → Brat. Sestra.</div>
+    </div>
+    <div class="card" style="border-top:3px solid #ef4444">
+      <div style="font-size:.85rem;font-weight:600;color:#991b1b;margin-bottom:.5rem">AKUZATIV — Koga/Šta primamo radnju</div>
+      <div style="font-size:1rem;margin-bottom:.3rem">Imam <strong style="color:#991b1b">brat-a</strong>. <span style="color:#ef4444;font-size:.8rem">← objekat</span></div>
+      <div style="font-size:1rem;margin-bottom:.3rem">Volim <strong style="color:#991b1b">sestr-u</strong>.</div>
+      <div style="font-size:.8rem;color:var(--mid);font-style:italic;margin-top:.5rem">Koga? → brata. Šta? → film.</div>
+    </div>
+  </div>
+  <table class="ptable">
+    <tr><th>Rod</th><th>Nominativ</th><th>Akuzativ</th><th>Pravilo</th><th>Primer</th></tr>
+    <tr><td><span class="badge-m">M</span> živo</td><td>brat, pas</td><td class="vbred">brat-a, ps-a</td><td style="color:#1d4ed8;font-size:.83rem">+ -a</td><td class="ex">Imam brata. Vidim psa.</td></tr>
+    <tr><td><span class="badge-m">M</span> neživo</td><td>film, srpski</td><td class="vbred">film, srpski</td><td style="color:#0E6655;font-size:.83rem">= isto</td><td class="ex">Gledam film. Učim srpski.</td></tr>
+    <tr><td><span class="badge-z">Ž</span></td><td>sestra, mačka</td><td class="vbred">sestr-u, mačk-u</td><td style="color:#991b1b;font-size:.83rem">-a → -u</td><td class="ex">Volim sestru. Imam mačku.</td></tr>
+    <tr><td><span class="badge-sr">Sr</span></td><td>dete, selo</td><td class="vbred">dete, selo</td><td style="color:#0E6655;font-size:.83rem">= isto</td><td class="ex">Imam dete. Vidim selo.</td></tr>
+  </table>
+  <div class="tip-red">⚠️ <strong>Zapamti:</strong> Ženski rod UVEK dobija -u! "sestra → sestru" · "mačka → mačku" · "knjiga → knjigu"</div>
+  <div class="tip-gold">💡 <strong>Ovo dolazi posle:</strong> imam · volim · vidim · čitam · gledam · slušam · kupujem · hoću...</div>
+</div>
+
+<!-- 3: ZANIMANJA + MESTA -->
+<div class="slide" id="s3">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-purple">💼</div>
+    <div class="sec-hdr-text"><h2>Zanimanja i mesta</h2><p>Professions & places — sa rodom i glagolima</p></div>
+  </div>
+  <div class="card-grid cols2">
+    <div class="card">
+      <h3>💼 Zanimanja — Professions</h3>
+      <p style="font-size:.78rem;color:var(--mid);margin-bottom:.6rem">U srpskom postoji muški i ženski oblik!</p>
+      <table class="ptable">
+        <tr><th>Muški (M)</th><th>Ženski (Ž)</th><th>English</th></tr>
+        <tr><td>lekar</td><td class="vbred">lekarka</td><td>doctor</td></tr>
+        <tr><td>nastavnik</td><td class="vbred">nastavnica</td><td>teacher</td></tr>
+        <tr><td>student</td><td class="vbred">studentkinja</td><td>student</td></tr>
+        <tr><td>programer</td><td class="vbred">programerka</td><td>programmer</td></tr>
+        <tr><td>muzičar</td><td class="vbred">muzičarka</td><td>musician</td></tr>
+        <tr><td>pevač</td><td class="vbred">pevačica</td><td>singer</td></tr>
+        <tr><td>pisac</td><td class="vbred">spisatelica</td><td>writer</td></tr>
+        <tr><td>kuvar</td><td class="vbred">kuvarica</td><td>cook / chef</td></tr>
+      </table>
+      <div style="margin-top:.7rem;background:var(--cream2);border-radius:8px;padding:.5rem .7rem;font-size:.85rem">
+        <strong>Ja sam</strong> <em>studentkinja / nastavnica / lekarka</em>.<br>
+        <strong>Moja mama je</strong> <em>lekarka</em>.
+      </div>
+    </div>
+    <div class="card">
+      <h3>📍 Mesta — Places (Idem u...)</h3>
+      <div style="display:flex;flex-direction:column;gap:.4rem;margin-top:.5rem">
+        <div style="display:flex;justify-content:space-between;padding:.4rem .6rem;background:var(--cream2);border-radius:8px;font-size:.88rem"><strong>škola</strong><span style="color:var(--mid)">Idem u školu.</span></div>
+        <div style="display:flex;justify-content:space-between;padding:.4rem .6rem;background:var(--white);border:1px solid var(--cream2);border-radius:8px;font-size:.88rem"><strong>posao</strong><span style="color:var(--mid)">Idem na posao.</span></div>
+        <div style="display:flex;justify-content:space-between;padding:.4rem .6rem;background:var(--cream2);border-radius:8px;font-size:.88rem"><strong>restoran</strong><span style="color:var(--mid)">Idemo u restoran.</span></div>
+        <div style="display:flex;justify-content:space-between;padding:.4rem .6rem;background:var(--white);border:1px solid var(--cream2);border-radius:8px;font-size:.88rem"><strong>kafić</strong><span style="color:var(--mid)">Sretamo se u kafiću.</span></div>
+        <div style="display:flex;justify-content:space-between;padding:.4rem .6rem;background:var(--cream2);border-radius:8px;font-size:.88rem"><strong>grad</strong><span style="color:var(--mid)">Idem u grad.</span></div>
+        <div style="display:flex;justify-content:space-between;padding:.4rem .6rem;background:var(--white);border:1px solid var(--cream2);border-radius:8px;font-size:.88rem"><strong>kuća</strong><span style="color:var(--mid)">Idem kući. 🏠*</span></div>
+        <div style="display:flex;justify-content:space-between;padding:.4rem .6rem;background:var(--cream2);border-radius:8px;font-size:.88rem"><strong>Srbija / Beograd</strong><span style="color:var(--mid)">Putujem u Srbiju.</span></div>
+      </div>
+      <p style="font-size:.75rem;color:var(--rose);margin-top:.5rem;font-style:italic">* Idem kući = I'm going home (prilog, bez "u"!)</p>
+    </div>
+  </div>
+</div>
+
+<!-- 4: GLAGOLI KRETANJA + VEZNICI -->
+<div class="slide" id="s4">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-teal" style="background:#0E6655">🚶</div>
+    <div class="sec-hdr-text"><h2>Kretanje i veznici</h2><p>Movement verbs + sentence connectors</p></div>
+  </div>
+  <div class="card-grid cols2">
+    <div class="card">
+      <h3>🚶 Glagoli kretanja</h3>
+      <div class="conj-grid">
+        <div class="conj-item">
+          <div><div class="conj-sr">ići</div><div style="font-size:.75rem;color:var(--mid)">to go</div></div>
+          <div><div style="font-size:.85rem"><strong>idem</strong> · ideš · ide · idemo</div><div class="conj-ex">"Idem u školu. Kuda ideš?"</div></div>
+        </div>
+        <div class="conj-item">
+          <div><div class="conj-sr">doći</div><div style="font-size:.75rem;color:var(--mid)">to come</div></div>
+          <div><div style="font-size:.85rem"><strong>dođem</strong> · dođeš · dođe</div><div class="conj-ex">"Dođi k meni! Kada dođeš?"</div></div>
+        </div>
+        <div class="conj-item">
+          <div><div class="conj-sr">otići</div><div style="font-size:.75rem;color:var(--mid)">to leave</div></div>
+          <div><div style="font-size:.85rem"><strong>odem</strong> · odeš · ode</div><div class="conj-ex">"Odlazim u 5. Kada odeš?"</div></div>
+        </div>
+        <div class="conj-item">
+          <div><div class="conj-sr">dolaziti</div><div style="font-size:.75rem;color:var(--mid)">to come (reg)</div></div>
+          <div><div style="font-size:.85rem"><strong>dolazim</strong> · dolaziš · dolazi</div><div class="conj-ex">"Ona dolazi svaki dan."</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🔗 Veznici — Connectors</h3>
+      <div style="display:flex;flex-direction:column;gap:.45rem;margin-top:.3rem">
+        <div style="padding:.4rem .7rem;background:#EBF5FB;border-radius:8px;font-size:.88rem"><strong style="color:#1A5276">i</strong> <span style="color:var(--mid)">= and</span> <em style="color:var(--dark)">— "Govorim srpski i nemački."</em></div>
+        <div style="padding:.4rem .7rem;background:#FADBD8;border-radius:8px;font-size:.88rem"><strong style="color:#991b1b">ali</strong> <span style="color:var(--mid)">= but</span> <em style="color:var(--dark)">— "Volim Berlin, ali i Beograd."</em></div>
+        <div style="padding:.4rem .7rem;background:#EAFAF1;border-radius:8px;font-size:.88rem"><strong style="color:#0E6655">jer</strong> <span style="color:var(--mid)">= because</span> <em style="color:var(--dark)">— "Učim srpski jer volim Srbiju."</em></div>
+        <div style="padding:.4rem .7rem;background:#EEEDFE;border-radius:8px;font-size:.88rem"><strong style="color:#3C3489">kada</strong> <span style="color:var(--mid)">= when</span> <em style="color:var(--dark)">— "Kada dođem kući, slušam muziku."</em></div>
+        <div style="padding:.4rem .7rem;background:#FAEEDA;border-radius:8px;font-size:.88rem"><strong style="color:#633806">ili</strong> <span style="color:var(--mid)">= or</span> <em style="color:var(--dark)">— "Idem u restoran ili kafić."</em></div>
+        <div style="padding:.4rem .7rem;background:#FEF3C7;border-radius:8px;font-size:.88rem"><strong style="color:#78350F">da</strong> <span style="color:var(--mid)">= that/to</span> <em style="color:var(--dark)">— "Hoću da naučim srpski."</em></div>
+        <div style="padding:.4rem .7rem;background:var(--cream2);border-radius:8px;font-size:.88rem"><strong style="color:var(--berry)">pa</strong> <span style="color:var(--mid)">= and then</span> <em style="color:var(--dark)">— "Idem u grad, pa u restoran."</em></div>
+      </div>
+    </div>
+  </div>
+  <div class="tip">💡 <strong>Veznici + glagoli = prave rečenice!</strong> "Volim srpski <em>jer</em> imam prijatelje, <em>ali</em> je teško, <em>pa</em> svaki dan učim."</div>
+</div>
+
+<!-- 5: TEKST ZA ČITANJE -->
+<div class="slide" id="s5">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-sage">📖</div>
+    <div class="sec-hdr-text"><h2>Tekst za čitanje</h2><p>Idealan dan u Beogradu · A1–A2 · ~150 reči</p></div>
+  </div>
+  <div class="legend">
+    <span class="leg"><span class="leg-dot" style="background:#3b82f6"></span>Prisvojni pridev</span>
+    <span class="leg"><span class="leg-dot" style="background:#ef4444"></span>Akuzativ</span>
+    <span class="leg"><span class="leg-dot" style="background:#1D9E75"></span>Kretanje</span>
+    <span class="leg"><span class="leg-dot" style="background:#EF9F27"></span>Veznik</span>
+    <span class="leg"><span class="leg-dot" style="background:#534AB7"></span>Zanimanje</span>
+  </div>
+  <div class="trans-toggle">
+    <span style="font-size:.8rem;color:var(--mid);line-height:26px;margin-right:4px">Prevod:</span>
+    <button class="ttbtn" onclick="toggleTrans('en',this)">🇬🇧 English</button>
+    <button class="ttbtn" onclick="toggleTrans('de',this)">🇩🇪 Deutsch</button>
+  </div>
+  <div class="reading-text">
+    <p>Zamislite: idealan dan u Beogradu! <span class="hl-move">Idem</span> u <span class="hl-prof">moj omiljeni</span> kafić na Skadarliji — <span class="hl-conj">jer</span> <span class="hl-move">tamo</span> uvek srećam <span class="hl-akuz">prijatelje</span>. <span class="hl-poss">Moja</span> prijateljica Ana je <span class="hl-prof">muzičarka</span> <span class="hl-conj">i</span> <span class="hl-poss">njen</span> dečko Stefan je <span class="hl-prof">programer</span>.</p>
+    <p>Ujutru <span class="hl-move">idemo</span> na pijac. Kupujem <span class="hl-akuz">voće i povrće</span> <span class="hl-conj">jer</span> volim da kuham. <span class="hl-move">Vraćamo se</span> kući <span class="hl-conj">pa</span> pravimo ručak zajedno. <span class="hl-poss">Naš</span> ručak je uvek ukusan!</p>
+    <p>Posle podne <span class="hl-move">idemo</span> u <span class="hl-akuz">grad</span>. Posećujemo <span class="hl-akuz">Kalemegdan</span> <span class="hl-conj">jer</span> je pogled odličan. <span class="hl-poss">Moja</span> omiljena stvar u Beogradu je energija — grad je živ i vedar.</p>
+    <p>Uveče <span class="hl-move">odlazimo</span> u restoran. <span class="hl-poss">Njihov</span> restoran je blizu <span class="hl-poss">moje</span> bake. Ana peva <span class="hl-akuz">srpske pesme</span> <span class="hl-conj">i</span> svi pevamo zajedno. <span class="hl-conj">Kada</span> se <span class="hl-move">vraćam</span> u Berlin, uvek nosim <span class="hl-akuz">tu</span> muziku u srcu.</p>
+  </div>
+  <div class="trans-block" id="trans-en">
+    <div style="display:flex;gap:.6rem"><span style="font-size:1rem">🇬🇧</span><span>Imagine: a perfect day in Belgrade! I go to my favourite café in Skadarlija — because I always meet friends there. My friend Ana is a musician and her boyfriend Stefan is a programmer.<br><br>In the morning we go to the market. I buy fruit and vegetables because I love to cook. We come back home and then make lunch together. Our lunch is always delicious!<br><br>In the afternoon we go into town. We visit Kalemegdan fortress because the view is excellent. My favourite thing about Belgrade is the energy — the city is lively and cheerful.<br><br>In the evening we go to a restaurant. Their restaurant is near my grandmother's place. Ana sings Serbian songs and we all sing together. When I return to Berlin, I always carry that music in my heart.</span></div>
+  </div>
+  <div class="trans-block" id="trans-de">
+    <div style="display:flex;gap:.6rem"><span style="font-size:1rem">🇩🇪</span><span>Stellen Sie sich vor: ein perfekter Tag in Belgrad! Ich gehe in mein Lieblingscafé in der Skadarlija — weil ich dort immer Freunde treffe. Meine Freundin Ana ist Musikerin und ihr Freund Stefan ist Programmierer.<br><br>Morgens gehen wir auf den Markt. Ich kaufe Obst und Gemüse, weil ich gerne koche. Wir kommen nach Hause und kochen dann gemeinsam Mittagessen. Unser Mittagessen ist immer lecker!<br><br>Nachmittags gehen wir in die Stadt. Wir besuchen die Kalemegdan-Festung, weil der Ausblick hervorragend ist. Mein Lieblingsding an Belgrad ist die Energie — die Stadt ist lebendig und heiter.<br><br>Abends gehen wir ins Restaurant. Ihr Restaurant liegt in der Nähe von meiner Oma. Ana singt serbische Lieder und wir singen alle zusammen. Wenn ich nach Berlin zurückkehre, trage ich immer diese Musik im Herzen.</span></div>
+  </div>
+</div>
+
+<!-- 6: VEŽBA 1 — PRISVOJNI PRIDEVI -->
+<div class="slide" id="s6">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-blue">👤</div>
+    <div class="sec-hdr-text"><h2>Vežba 1 — Prisvojni pridevi</h2><p>Stavi tačan oblik — pazi na rod imenice!</p></div>
+  </div>
+  <div class="ex-block">
+    <div class="ex-title">Koji oblik prisvojnog prideva ide ovde?</div>
+    <div class="ex-instr">moj/moja/moje · tvoj/tvoja · njegov/njegova · njen/njena · naš/naša</div>
+    <div id="fill-form">
+      <div class="fill-row"><span class="fill-num">1.</span><span class="fill-sent"><input class="fill-blank" id="f1" data-ans="moj" placeholder="___"> brat živi u Hamburgu. (M)</span></div>
+      <div class="fill-row"><span class="fill-num">2.</span><span class="fill-sent"><input class="fill-blank" id="f2" data-ans="njena" placeholder="___"> mama je lekarka. (Ž)</span></div>
+      <div class="fill-row"><span class="fill-num">3.</span><span class="fill-sent">Gde je <input class="fill-blank" id="f3" data-ans="tvoja" placeholder="___"> kuća? (Ž)</span></div>
+      <div class="fill-row"><span class="fill-num">4.</span><span class="fill-sent"><input class="fill-blank" id="f4" data-ans="naša" placeholder="___"> nastavnica se zove Jasna. (Ž)</span></div>
+      <div class="fill-row"><span class="fill-num">5.</span><span class="fill-sent"><input class="fill-blank" id="f5" data-ans="njegov" placeholder="___"> pas je beo. (M)</span></div>
+      <div class="fill-row"><span class="fill-num">6.</span><span class="fill-sent"><input class="fill-blank" id="f6" data-ans="moje" placeholder="___"> dete se zove Ana. (Sr)</span></div>
+      <div class="fill-row"><span class="fill-num">7.</span><span class="fill-sent"><input class="fill-blank" id="f7" data-ans="njihova" placeholder="___"> kuća je u Beogradu. (Ž)</span></div>
+    </div>
+    <button class="check-btn" onclick="checkFill()">Proveri odgovore ✓</button>
+    <div class="feedback" id="fill-fb"></div>
+  </div>
+</div>
+
+<!-- 7: VEŽBA 2 — AKUZATIV -->
+<div class="slide" id="s7">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-rose">📝</div>
+    <div class="sec-hdr-text"><h2>Vežba 2 — Akuzativ!</h2><p>Pretvori imenicu u akuzativ</p></div>
+  </div>
+  <div class="ex-block">
+    <div class="ex-title">Klikni na tačan oblik akuzativa</div>
+    <div class="ex-instr">Ž: -a → -u · M živo: +a · M neživo = isto · Sr = isto</div>
+    <div id="akuz-form"></div>
+    <button class="check-btn" onclick="checkAkuz()">Proveri ✓</button>
+    <div class="feedback" id="akuz-fb"></div>
+  </div>
+</div>
+
+<!-- 8: VEŽBA 3 — SPOJI VEZNIK -->
+<div class="slide" id="s8">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-gold">🔗</div>
+    <div class="sec-hdr-text"><h2>Vežba 3 — Spoji veznike!</h2><p>Srpski veznik ↔ engleski prevod</p></div>
+  </div>
+  <div class="ex-block">
+    <div class="ex-title">Klikni srpski, pa engleski prevod</div>
+    <div class="match-grid">
+      <div class="match-col" id="match-sr"></div>
+      <div class="match-col" id="match-en"></div>
+    </div>
+    <div class="match-score" id="match-score">0 / 7 spojeno</div>
+  </div>
+  <div class="tip">💡 <strong>Najvažniji:</strong> <em>jer</em> (because) — ovo čuješ svuda u srpskom razgovoru!</div>
+</div>
+
+<!-- 9: VEŽBA 4 — PREVEDI -->
+<div class="slide" id="s9">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-sage">🌍</div>
+    <div class="sec-hdr-text"><h2>Vežba 4 — Prevedi na srpski</h2><p>Koristi sve što si naučila!</p></div>
+  </div>
+  <div class="ex-block">
+    <div class="ex-title">Prevedi rečenice na srpski</div>
+    <div class="ex-instr">Fokus: prisvojni pridev + akuzativ + veznik</div>
+    <div id="transl-form">
+      <div class="transl-row"><div class="transl-en">1. My sister is a doctor.</div><input class="transl-input" id="t1" placeholder="Moja sestra..."><div class="feedback" id="tf1" style="margin-top:.4rem;font-size:.83rem;padding:.5rem .8rem"></div></div>
+      <div class="transl-row"><div class="transl-en">2. I'm going to work tomorrow.</div><input class="transl-input" id="t2" placeholder="Sutra idem..."><div class="feedback" id="tf2" style="margin-top:.4rem;font-size:.83rem;padding:.5rem .8rem"></div></div>
+      <div class="transl-row"><div class="transl-en">3. I love Serbian music but I also speak German.</div><input class="transl-input" id="t3" placeholder="Volim..."><div class="feedback" id="tf3" style="margin-top:.4rem;font-size:.83rem;padding:.5rem .8rem"></div></div>
+      <div class="transl-row"><div class="transl-en">4. Her dog is white and his name is Bruno.</div><input class="transl-input" id="t4" placeholder="Njen pas..."><div class="feedback" id="tf4" style="margin-top:.4rem;font-size:.83rem;padding:.5rem .8rem"></div></div>
+      <div class="transl-row"><div class="transl-en">5. I'm learning Serbian because I love Serbia.</div><input class="transl-input" id="t5" placeholder="Učim srpski..."><div class="feedback" id="tf5" style="margin-top:.4rem;font-size:.83rem;padding:.5rem .8rem"></div></div>
+    </div>
+    <button class="check-btn" onclick="revealAll()">Otkrij sve odgovore</button>
+  </div>
+</div>
+
+<!-- 10: KRAJ — FAZA 1 FINALE -->
+<div class="slide" id="s10">
+  <div class="congrats">
+    <div class="phase-badge">🎉 Faza 1 — ZAVRŠENA!</div>
+    <div class="big">Bravo, Marle! 🌸</div>
+    <p>Za 4 nedelje prešla si celu Fazu 1. Evo sve što znaš sada:</p>
+    <ul class="done-list">
+      <li><span class="chk">✓</span><strong>N1:</strong> BITI · Pozdravi · Brojevi · Dani</li>
+      <li><span class="chk">✓</span><strong>N2:</strong> IMATI · Rod imenica · Porodica · Boje</li>
+      <li><span class="chk">✓</span><strong>N3:</strong> Prezent glagola · Meseci · Godišnja doba · Pitanja</li>
+      <li><span class="chk">✓</span><strong>N4:</strong> Prisvojni pridevi · Akuzativ · Zanimanja · Veznici</li>
+      <li><span class="chk">✓</span>80 Anki kartica (Set 1–4)</li>
+      <li><span class="chk">✓</span>Možeš opisati sebe, porodicu i ceo dan na srpskom!</li>
+    </ul>
+    <div style="margin-top:1.5rem;padding:1.2rem 1.5rem;background:var(--berry);border-radius:14px;max-width:460px;margin-left:auto;margin-right:auto;color:var(--cream)">
+      <div style="font-size:.9rem;font-weight:500;margin-bottom:.6rem;color:var(--gold)">Šta dolazi u Fazi 2? (Nedelja 5+)</div>
+      <div style="font-size:.85rem;line-height:1.8;opacity:.9">
+        ✦ Perfekat (šta si radila juče/prošle nedelje)<br>
+        ✦ Lokativ (gde si? u školi, u gradu, u Srbiji)<br>
+        ✦ Poređenje (lepši, veći, bolji)<br>
+        ✦ Buduće vreme (šta ćeš raditi sutra)<br>
+        ✦ Srpske vesti i filmovi — počinjemo!
+      </div>
+    </div>
+    <div style="margin-top:1.2rem;padding:1rem 1.25rem;background:var(--cream2);border-radius:12px;max-width:420px;margin-left:auto;margin-right:auto">
+      <div style="font-size:.85rem;font-weight:500;color:var(--berry);margin-bottom:.5rem">Za kod kuće 🏠</div>
+      <div style="font-size:.83rem;color:var(--mid);line-height:1.7">📱 Anki Set 1–4 (sve 80 kartica!) svaki dan<br>🎵 Dino Merlin — "Nebo" (puna veznika!)<br>✍️ Napiši 8 rečenica o idealnom danu u Beogradu</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end stage -->
+
+<div class="bottom-nav">
+  <button class="nav-btn nav-prev" id="btn-prev" onclick="go(-1)">← Nazad</button>
+  <span class="slide-counter" id="counter">1 / 11</span>
+  <button class="nav-btn nav-next" id="btn-next" onclick="go(1)">Napred →</button>
+</div>
+
+<script>
+const TOTAL = 11;
+let cur = 0;
+const slides = Array.from(document.querySelectorAll('.slide'));
+const pbar = document.getElementById('pbar');
+const counter = document.getElementById('counter');
+const stepper = document.getElementById('stepper');
+
+for(let i = 0; i < TOTAL; i++){
+  const d = document.createElement('button');
+  d.className = 'step-dot' + (i===0?' active':'');
+  d.onclick = (function(idx){return function(){jumpTo(idx);};})(i);
+  stepper.appendChild(d);
+}
+function updateUI(){
+  slides.forEach((s,i)=>s.classList.toggle('active',i===cur));
+  stepper.querySelectorAll('.step-dot').forEach((d,i)=>{
+    d.classList.toggle('active',i===cur);
+    d.classList.toggle('done',i<cur);
+  });
+  pbar.style.width=((cur/(TOTAL-1))*100)+'%';
+  counter.textContent=(cur+1)+' / '+TOTAL;
+  document.getElementById('btn-prev').style.visibility=cur===0?'hidden':'visible';
+  document.getElementById('btn-next').textContent=cur===TOTAL-1?'🌸 Završi':'Napred →';
+  window.scrollTo(0,0);
+}
+function go(dir){cur=Math.max(0,Math.min(TOTAL-1,cur+dir));updateUI();}
+function jumpTo(i){cur=i;updateUI();}
+updateUI();
+
+/* FILL EXERCISE */
+function checkFill(){
+  const inputs=document.querySelectorAll('#fill-form .fill-blank');
+  let ok=0;
+  inputs.forEach(inp=>{
+    const v=inp.value.trim().toLowerCase();
+    const a=inp.dataset.ans.toLowerCase();
+    if(v===a){inp.classList.add('correct');inp.classList.remove('wrong');ok++;}
+    else if(v){inp.classList.add('wrong');inp.classList.remove('correct');}
+  });
+  const fb=document.getElementById('fill-fb');
+  fb.className='feedback show '+(ok===inputs.length?'ok':'nope');
+  fb.textContent=ok===inputs.length?'Savršeno! Svi prisvojni pridevi tačni! 🎉':ok+' / '+inputs.length+' tačno. Pazi na rod imenice!';
+}
+
+/* AKUZATIV EXERCISE */
+const akuzWords=[
+  {nom:'brat',opts:['brat','brata','bratu'],ans:'brata',note:'M živo → +a'},
+  {nom:'sestra',opts:['sestra','sestri','sestru'],ans:'sestru',note:'Ž → -a → -u'},
+  {nom:'film',opts:['film','filma','filmu'],ans:'film',note:'M neživo = isto'},
+  {nom:'mačka',opts:['mačka','mačku','mački'],ans:'mačku',note:'Ž → -a → -u'},
+  {nom:'dete',opts:['dete','deti','detu'],ans:'dete',note:'Sr = isto'},
+  {nom:'pas',opts:['pas','psa','psu'],ans:'psa',note:'M živo → +a'},
+];
+const akuzForm=document.getElementById('akuz-form');
+akuzWords.forEach((item,i)=>{
+  const row=document.createElement('div');
+  row.style.cssText='display:flex;align-items:center;gap:.7rem;margin-bottom:.7rem;flex-wrap:wrap';
+  row.innerHTML='<span style="font-weight:500;font-size:.95rem;min-width:80px">'+item.nom+'</span>'
+    +'<span style="font-size:.82rem;color:var(--mid)">→</span>';
+  item.opts.forEach(opt=>{
+    const btn=document.createElement('button');
+    btn.style.cssText='padding:.3rem .8rem;border-radius:14px;border:1.5px solid var(--blush);background:var(--cream2);font-size:.88rem;cursor:pointer;font-family:DM Sans,sans-serif;transition:all .15s;';
+    btn.textContent=opt;btn.dataset.word=item.nom;btn.dataset.val=opt;btn.dataset.ans=item.ans;
+    btn.onclick=function(){
+      row.querySelectorAll('button').forEach(b=>b.style.background='var(--cream2)');
+      btn.style.background='var(--berry)';btn.style.color='var(--cream)';
+      btn.dataset.selected='1';
+    };
+    row.appendChild(btn);
+  });
+  const note=document.createElement('span');
+  note.style.cssText='font-size:.75rem;color:var(--mid);font-style:italic';
+  note.textContent='('+item.note+')';
+  row.appendChild(note);
+  akuzForm.appendChild(row);
+});
+function checkAkuz(){
+  let ok=0,total=akuzWords.length;
+  akuzWords.forEach((item,i)=>{
+    const row=akuzForm.children[i];
+    const selBtn=Array.from(row.querySelectorAll('button')).find(b=>b.dataset.selected==='1');
+    if(selBtn){
+      if(selBtn.dataset.val===item.ans){
+        selBtn.style.background='#0E6655';selBtn.style.color='white';ok++;
+      } else {
+        selBtn.style.background='#991b1b';selBtn.style.color='white';
+      }
+    }
+  });
+  const fb=document.getElementById('akuz-fb');
+  fb.className='feedback show '+(ok===total?'ok':'nope');
+  fb.textContent=ok===total?'Bravo! Svi akuzativi tačni! 🌟':ok+' / '+total+' tačno.';
+}
+
+/* MATCH EXERCISE */
+const matchPairs=[
+  ['i','and'],['ali','but'],['jer','because'],['kada','when'],
+  ['ili','or'],['da','that/to'],['pa','and then']
+];
+let selSr=null,selEn=null,matched=0;
+function shuffle(a){return[...a].sort(()=>Math.random()-.5);}
+shuffle([...matchPairs]).forEach(([s,e])=>{
+  const d=document.createElement('div');
+  d.className='match-item';d.textContent=s;d.dataset.key=s;
+  d.onclick=function(){pickSr(d);};
+  document.getElementById('match-sr').appendChild(d);
+});
+shuffle([...matchPairs]).forEach(([s,e])=>{
+  const d=document.createElement('div');
+  d.className='match-item';d.textContent=e;d.dataset.key=s;
+  d.onclick=function(){pickEn(d);};
+  document.getElementById('match-en').appendChild(d);
+});
+function pickSr(el){
+  if(el.classList.contains('matched'))return;
+  document.querySelectorAll('#match-sr .match-item').forEach(e=>e.classList.remove('selected'));
+  el.classList.add('selected');selSr=el;if(selEn)tryMatch();
+}
+function pickEn(el){
+  if(el.classList.contains('matched'))return;
+  document.querySelectorAll('#match-en .match-item').forEach(e=>e.classList.remove('selected'));
+  el.classList.add('selected');selEn=el;if(selSr)tryMatch();
+}
+function tryMatch(){
+  if(selSr.dataset.key===selEn.dataset.key){
+    [selSr,selEn].forEach(e=>{e.classList.add('matched');e.classList.remove('selected');});
+    matched++;
+    document.getElementById('match-score').textContent=matched===7?'🎉 Sve spojeno! Bravo!':matched+' / 7 spojeno';
+  } else {
+    [selSr,selEn].forEach(e=>{e.classList.add('wrong-flash');setTimeout(()=>e.classList.remove('wrong-flash','selected'),600);});
+  }
+  selSr=null;selEn=null;
+}
+
+/* TRANSLATE */
+const answers={
+  t1:'Moja sestra je lekarka.',
+  t2:'Sutra idem na posao.',
+  t3:'Volim srpsku muziku, ali i govorim nemački.',
+  t4:'Njen pas je beo i zove se Bruno.',
+  t5:'Učim srpski jer volim Srbiju.'
+};
+function revealAll(){
+  Object.entries(answers).forEach(([id,ans])=>{
+    const inp=document.getElementById(id);
+    inp.value='';inp.className='transl-input revealed';
+    const fb=document.getElementById('tf'+id.slice(1));
+    fb.className='feedback show ok';fb.textContent='✓ '+ans;
+  });
+}
+function toggleTrans(lang,btn){
+  const el=document.getElementById('trans-'+lang);
+  const isOn=el.classList.toggle('show');
+  btn.classList.toggle('on',isOn);
+}
+</script>
+</body>
+</html>
