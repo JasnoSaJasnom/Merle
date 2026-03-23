@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lekcije</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f3e7ff, #e0f7fa);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .lesson {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
+
+        .lesson:hover {
+            transform: translateY(-5px);
+        }
+
+        .lesson a {
+            text-decoration: none;
+            color: #6a1b9a;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .lesson ul {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .lesson {
+                padding: 15px;
+            }
+
+            .lesson a {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Lekcije</h1>
+
+    <div class="lesson">
+        <a href="lekcija1.html">Lekcija 1</a>
+        <ul>
+            <li>Glagol "imati"</li>
+            <li>Boje</li>
+            <li>Vremena</li>
+            <li>Vežbe</li>
+            <li>Domaći zadatak</li>
+        </ul>
+    </div>
+
+    <div class="lesson">
+        <a href="lekcija2.html">Lekcija 2</a>
+        <ul>
+            <li>Glagol "biti"</li>
+            <li>Brojevi</li>
+            <li>Osnovne rečenice</li>
+            <li>Vežbe</li>
+            <li>Domaći zadatak</li>
+        </ul>
+    </div>
+
+    <div class="lesson">
+        <a href="lekcija3.html">Lekcija 3</a>
+        <ul>
+            <li>Zamenice</li>
+            <li>Dani u nedelji</li>
+            <li>Prosto vreme</li>
+            <li>Vežbe</li>
+            <li>Domaći zadatak</li>
+        </ul>
+    </div>
+
+</div>
+
+</body>
+</html>
