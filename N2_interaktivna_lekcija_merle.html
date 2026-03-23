@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Srpski · Nedelja 2 · Marle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --berry:#6D2E46;--rose:#A26769;--cream:#F5ECD7;--cream2:#EDE0CC;
+  --gold:#C4975A;--sage:#7A9E87;--dark:#2C1810;--mid:#7A5C5C;
+  --white:#fff;--blush:#E8C4C4;
+  --slide-bg:#FDFAF5;
+}
+
+body{font-family:'DM Sans',sans-serif;background:var(--cream);min-height:100vh;color:var(--dark)}
+
+/* ── TOP NAV ── */
+.top-bar{background:var(--berry);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:52px;position:sticky;top:0;z-index:100}
+.top-bar-title{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--cream);letter-spacing:.02em}
+.top-bar .week{font-size:.75rem;color:#E8C4C4;font-weight:300}
+.progress-bar{height:3px;background:var(--gold);transition:width .4s ease;position:absolute;bottom:0;left:0}
+
+/* ── SLIDE STEPPER ── */
+.stepper{display:flex;gap:6px;align-items:center}
+.step-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:all .2s;border:none;padding:0}
+.step-dot.active{background:var(--gold);transform:scale(1.3)}
+.step-dot.done{background:var(--sage)}
+
+/* ── MAIN STAGE ── */
+.stage{max-width:860px;margin:0 auto;padding:1.5rem 1rem 5rem}
+
+.slide{display:none;animation:fadeIn .35s ease}
+.slide.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ── SLIDE TYPES ── */
+.slide-hero{text-align:center;padding:2.5rem 1rem}
+.slide-hero .num{font-size:3.5rem;font-family:'Playfair Display',serif;color:var(--berry);line-height:1;margin-bottom:.5rem}
+.slide-hero h2{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:600;color:var(--dark);margin-bottom:.6rem}
+.slide-hero p{color:var(--mid);font-size:1rem;line-height:1.7;max-width:520px;margin:0 auto 1.5rem}
+.hero-chips{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center}
+.chip{padding:.3rem .8rem;border-radius:20px;font-size:.8rem;font-weight:500}
+.chip-teal{background:#E1F5EE;color:#0F6E56}
+.chip-purple{background:#EEEDFE;color:#3C3489}
+.chip-pink{background:#FBEAF0;color:#72243E}
+.chip-amber{background:#FAEEDA;color:#633806}
+
+/* ── CARD GRID ── */
+.card-grid{display:grid;gap:1rem;margin-top:1rem}
+.card-grid.cols2{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.card-grid.cols3{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.card{background:var(--white);border-radius:14px;padding:1.2rem 1.3rem;border:1px solid var(--blush)}
+.card h3{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--berry);margin-bottom:.7rem}
+.card .tag{display:inline-block;font-size:.7rem;font-weight:500;padding:2px 8px;border-radius:10px;margin-bottom:.5rem}
+.tag-m{background:#dbeafe;color:#1d4ed8}
+.tag-z{background:#fce7f3;color:#9d174d}
+.tag-sr{background:#d1fae5;color:#065f46}
+
+/* ── PARADIGM TABLE ── */
+.ptable{width:100%;border-collapse:collapse;margin:.75rem 0;font-size:.92rem}
+.ptable th{background:var(--berry);color:var(--cream);padding:.55rem .8rem;text-align:left;font-weight:500;font-size:.8rem}
+.ptable td{padding:.5rem .8rem;border-bottom:1px solid var(--cream2)}
+.ptable tr:nth-child(even) td{background:var(--cream2)}
+.ptable .verb{font-weight:600;color:var(--berry)}
+.ptable .example{color:var(--mid);font-size:.85rem;font-style:italic}
+
+/* ── READING TEXT ── */
+.reading-text{background:var(--white);border-radius:14px;padding:1.5rem 1.7rem;border:1px solid var(--blush);font-size:1.05rem;line-height:1.9}
+.reading-text p{margin-bottom:1rem}
+.reading-text p:last-child{margin-bottom:0}
+.hl-imati{font-weight:600;color:#0F6E56;border-bottom:2px solid #5DCAA5}
+.hl-rod{font-weight:600;color:#3C3489;border-bottom:2px solid #AFA9EC}
+.hl-boje{font-weight:600;color:#633806;border-bottom:2px solid #EF9F27}
+.hl-fam{font-weight:600;color:#72243E;border-bottom:2px solid #ED93B1}
+.trans-toggle{margin:1rem 0 .5rem;display:flex;gap:.5rem;flex-wrap:wrap}
+.ttbtn{font-size:.78rem;padding:.3rem .75rem;border-radius:20px;border:1px solid var(--blush);background:transparent;color:var(--mid);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+.ttbtn:hover,.ttbtn.on{background:var(--berry);color:var(--cream);border-color:var(--berry)}
+.trans-block{background:var(--cream2);border-radius:10px;padding:1rem 1.2rem;margin-top:.5rem;font-size:.9rem;line-height:1.7;color:var(--mid);display:none}
+.trans-block.show{display:block}
+.trans-block .trow{display:flex;gap:.6rem;margin-bottom:.4rem}
+.trans-block .trow:last-child{margin-bottom:0}
+.flag{font-size:1rem}
+
+/* ── VOCAB CARDS ── */
+.vocab-strip{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:.6rem;margin:.75rem 0}
+.vc{background:var(--white);border:1px solid var(--cream2);border-radius:10px;padding:.65rem .85rem}
+.vc .sr{font-weight:500;font-size:.95rem;color:var(--dark)}
+.vc .en{font-size:.78rem;color:var(--mid);margin-top:2px}
+.vc .de{font-size:.78rem;color:var(--rose)}
+.vc .gend{font-size:.7rem;padding:1px 6px;border-radius:8px;display:inline-block;margin-top:4px}
+
+/* ── EXERCISES ── */
+.ex-block{background:var(--white);border-radius:14px;padding:1.4rem 1.5rem;border:1px solid var(--blush);margin-bottom:1rem}
+.ex-title{font-family:'Playfair Display',serif;font-size:1rem;color:var(--berry);margin-bottom:.3rem}
+.ex-instr{font-size:.85rem;color:var(--mid);margin-bottom:1rem;font-style:italic}
+.fill-row{display:grid;grid-template-columns:28px 1fr;gap:.5rem;align-items:baseline;margin-bottom:.6rem;font-size:.93rem}
+.fill-num{color:var(--rose);font-weight:500;text-align:right}
+.fill-sent{line-height:1.6}
+.fill-blank{display:inline-block;border:none;border-bottom:2px solid var(--blush);width:90px;text-align:center;font-family:'DM Sans',sans-serif;font-size:.93rem;color:var(--dark);background:transparent;outline:none;transition:border-color .2s}
+.fill-blank:focus{border-color:var(--berry)}
+.fill-blank.correct{border-color:var(--sage);color:var(--sage)}
+.fill-blank.wrong{border-color:#E24B4A;color:#E24B4A}
+.check-btn{margin-top:1rem;padding:.5rem 1.2rem;background:var(--berry);color:var(--cream);border:none;border-radius:20px;font-family:'DM Sans',sans-serif;font-size:.85rem;cursor:pointer;transition:opacity .15s}
+.check-btn:hover{opacity:.85}
+.feedback{margin-top:.75rem;font-size:.85rem;padding:.6rem 1rem;border-radius:8px;display:none}
+.feedback.show{display:block}
+.feedback.ok{background:#E1F5EE;color:#0F6E56}
+.feedback.nope{background:#FCEBEB;color:#A32D2D}
+
+/* MATCH exercise */
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.match-col{display:flex;flex-direction:column;gap:.5rem}
+.match-item{padding:.5rem .9rem;border-radius:8px;border:1.5px solid var(--blush);background:var(--cream2);font-size:.9rem;cursor:pointer;transition:all .2s;user-select:none}
+.match-item.selected{background:var(--berry);color:var(--cream);border-color:var(--berry)}
+.match-item.matched{background:var(--sage);color:var(--white);border-color:var(--sage);cursor:default}
+.match-item.wrong-flash{background:#FCEBEB;border-color:#E24B4A}
+.match-score{font-size:.85rem;color:var(--mid);margin-top:.75rem}
+
+/* GENDER exercise */
+.gender-word{display:flex;align-items:center;gap:.6rem;margin-bottom:.7rem}
+.gender-word .word{font-weight:500;font-size:.95rem;min-width:130px}
+.gender-opts{display:flex;gap:.4rem}
+.gbtn{padding:.25rem .7rem;border-radius:14px;border:1.5px solid var(--blush);background:transparent;font-size:.82rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.gbtn:hover{border-color:var(--berry)}
+.gbtn.sel-m{background:#dbeafe;color:#1d4ed8;border-color:#3b82f6}
+.gbtn.sel-z{background:#fce7f3;color:#9d174d;border-color:#ec4899}
+.gbtn.sel-sr{background:#d1fae5;color:#065f46;border-color:#10b981}
+.gbtn.correct{outline:2px solid var(--sage)}
+.gbtn.wrong{outline:2px solid #E24B4A}
+
+/* TRANSLATE exercise */
+.transl-row{margin-bottom:.9rem}
+.transl-en{font-size:.9rem;color:var(--mid);margin-bottom:.3rem}
+.transl-input{width:100%;padding:.45rem .7rem;border:1.5px solid var(--blush);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.9rem;background:transparent;color:var(--dark);outline:none;transition:border-color .2s}
+.transl-input:focus{border-color:var(--berry)}
+.transl-input.revealed{border-color:var(--sage);background:#E1F5EE;color:#0F6E56}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--cream2);padding:.7rem 1.5rem;display:flex;align-items:center;justify-content:space-between;}
+.nav-btn{padding:.55rem 1.3rem;border-radius:22px;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:500;cursor:pointer;transition:all .18s;border:none}
+.nav-prev{background:var(--cream2);color:var(--mid)}
+.nav-prev:hover{background:var(--blush)}
+.nav-next{background:var(--berry);color:var(--cream)}
+.nav-next:hover{opacity:.88}
+.slide-counter{font-size:.82rem;color:var(--mid)}
+
+/* ── SECTION HEADER ── */
+.sec-hdr{display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem}
+.sec-icon{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.sec-icon.bg-berry{background:var(--berry);color:var(--cream)}
+.sec-icon.bg-sage{background:var(--sage);color:var(--white)}
+.sec-icon.bg-gold{background:var(--gold);color:var(--white)}
+.sec-icon.bg-rose{background:var(--rose);color:var(--white)}
+.sec-hdr-text h2{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--dark)}
+.sec-hdr-text p{font-size:.83rem;color:var(--mid)}
+
+/* ── TIP BOX ── */
+.tip{background:#EEEDFE;border-left:3px solid #7F77DD;border-radius:0 10px 10px 0;padding:.7rem 1rem;font-size:.85rem;color:#3C3489;margin:1rem 0;line-height:1.6}
+
+/* ── LEGEND STRIP ── */
+.legend{display:flex;flex-wrap:wrap;gap:.6rem;margin:.5rem 0 1rem;align-items:center}
+.leg{display:flex;align-items:center;gap:4px;font-size:.77rem;color:var(--mid)}
+.leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* ── CONGRATS ── */
+.congrats{text-align:center;padding:3rem 1rem}
+.congrats .big{font-family:'Playfair Display',serif;font-size:2.5rem;color:var(--berry);margin-bottom:.5rem}
+.congrats p{color:var(--mid);font-size:1rem;max-width:440px;margin:0 auto 1.5rem}
+.done-list{list-style:none;max-width:380px;margin:0 auto;text-align:left}
+.done-list li{display:flex;gap:.6rem;align-items:flex-start;margin-bottom:.55rem;font-size:.9rem}
+.done-list .chk{color:var(--sage);font-size:1rem;flex-shrink:0;margin-top:2px}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div>
+    <div class="top-bar-title">Srpski · Nedelja 2</div>
+    <div class="week">Moja porodica · IMATI · Rod imenica · Boje</div>
+  </div>
+  <div class="stepper" id="stepper"></div>
+  <div class="progress-bar" id="pbar"></div>
+</div>
+
+<!-- SLIDES -->
+<div class="stage" id="stage">
+
+<!-- 0: WELCOME -->
+<div class="slide active" id="s0">
+  <div class="slide-hero">
+    <div class="num">2</div>
+    <h2>Dobrodošla, Marle! 🌸</h2>
+    <p>Danas učiš glagol <strong>IMATI</strong>, rod imenica, porodicu i boje. Sve korak po korak — nisi sama!</p>
+    <div class="hero-chips">
+      <span class="chip chip-teal">🔑 IMATI — to have</span>
+      <span class="chip chip-purple">📚 Rod imenica M/Ž/Sr</span>
+      <span class="chip chip-pink">👨‍👩‍👧 Porodica</span>
+      <span class="chip chip-amber">🎨 Boje</span>
+    </div>
+  </div>
+  <div class="tip">💡 <strong>Danas:</strong> 6 delova lekcije + 3 vrste vežbi + tekst za čitanje. Kreni kada budeš spremna!</div>
+</div>
+
+<!-- 1: IMATI PARADIGMA -->
+<div class="slide" id="s1">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-berry">🔑</div>
+    <div class="sec-hdr-text"><h2>Glagol IMATI — "to have"</h2><p>Drugi najvažniji glagol u srpskom — uči ga napamet!</p></div>
+  </div>
+  <table class="ptable">
+    <tr><th>Lice</th><th>Srpski</th><th>English</th><th>Deutsch</th><th>Primer</th></tr>
+    <tr><td>ja</td><td class="verb">imam</td><td>I have</td><td>ich habe</td><td class="example">Ja imam sestru.</td></tr>
+    <tr><td>ti</td><td class="verb">imaš</td><td>you have</td><td>du hast</td><td class="example">Ti imaš brata?</td></tr>
+    <tr><td>on / ona</td><td class="verb">ima</td><td>he / she has</td><td>er / sie hat</td><td class="example">Ona ima psa.</td></tr>
+    <tr><td>mi</td><td class="verb">imamo</td><td>we have</td><td>wir haben</td><td class="example">Mi imamo mačku.</td></tr>
+    <tr><td>vi</td><td class="verb">imate</td><td>you have (pl.)</td><td>ihr habt</td><td class="example">Vi imate decu?</td></tr>
+    <tr><td>oni / one</td><td class="verb">imaju</td><td>they have</td><td>sie haben</td><td class="example">Oni imaju psa.</td></tr>
+  </table>
+  <div class="tip">🚫 <strong>Negacija:</strong> nemam · nemaš · nema · nemamo · nemate · nemaju<br>Primer: <em>Nemam brata.</em> (I don't have a brother.)</div>
+  <div class="tip" style="background:#FAEEDA;border-color:#EF9F27;color:#633806">❓ <strong>Pitanje:</strong> Dodaj <em>li</em> iza glagola — <em>Imaš li sestru?</em> = Do you have a sister?</div>
+</div>
+
+<!-- 2: ROD IMENICA -->
+<div class="slide" id="s2">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-rose">📚</div>
+    <div class="sec-hdr-text"><h2>Rod imenica — Noun gender</h2><p>Svaka imenica ima rod. Krajnji slog otkriva koji!</p></div>
+  </div>
+  <div class="card-grid cols3">
+    <div class="card" style="border-top:3px solid #3b82f6">
+      <span class="tag tag-m">Muški rod — M</span>
+      <h3 style="color:#1d4ed8">Završava na <em>suglasnik</em></h3>
+      <p style="font-size:.88rem;line-height:1.7;color:var(--mid)"><strong>brat</strong> (brother)<br><strong>otac</strong> (father)<br><strong>pas</strong> (dog)<br><strong>sin</strong> (son)<br><strong>ujak</strong> (uncle)</p>
+      <div style="margin-top:.8rem;font-size:.82rem;color:#1d4ed8;background:#dbeafe;padding:.4rem .7rem;border-radius:8px">🇩🇪 Wie <em>der</em> Bruder</div>
+    </div>
+    <div class="card" style="border-top:3px solid #ec4899">
+      <span class="tag tag-z">Ženski rod — Ž</span>
+      <h3 style="color:#9d174d">Završava na <em>-a</em></h3>
+      <p style="font-size:.88rem;line-height:1.7;color:var(--mid)"><strong>sestra</strong> (sister)<br><strong>mama</strong> (mum)<br><strong>mačka</strong> (cat)<br><strong>kćerka</strong> (daughter)<br><strong>baka</strong> (grandma)</p>
+      <div style="margin-top:.8rem;font-size:.82rem;color:#9d174d;background:#fce7f3;padding:.4rem .7rem;border-radius:8px">🇩🇪 Wie <em>die</em> Schwester</div>
+    </div>
+    <div class="card" style="border-top:3px solid #10b981">
+      <span class="tag tag-sr">Srednji rod — Sr</span>
+      <h3 style="color:#065f46">Završava na <em>-o</em> ili <em>-e</em></h3>
+      <p style="font-size:.88rem;line-height:1.7;color:var(--mid)"><strong>dete</strong> (child)<br><strong>ime</strong> (name)<br><strong>selo</strong> (village)<br><strong>more</strong> (sea)<br><strong>pismo</strong> (letter)</p>
+      <div style="margin-top:.8rem;font-size:.82rem;color:#065f46;background:#d1fae5;padding:.4rem .7rem;border-radius:8px">🇩🇪 Wie <em>das</em> Kind</div>
+    </div>
+  </div>
+  <div class="tip" style="margin-top:1rem">💡 Boje (adjectives) se slažu sa rodom! <span style="color:#1d4ed8"><em>crn</em> pas (M)</span> · <span style="color:#9d174d"><em>crna</em> mačka (Ž)</span> · <span style="color:#065f46"><em>crno</em> dete (Sr)</span></div>
+</div>
+
+<!-- 3: PORODICA + BOJE -->
+<div class="slide" id="s3">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-gold">👨‍👩‍👧</div>
+    <div class="sec-hdr-text"><h2>Porodica i boje</h2><p>Vokabular sa rodom imenice i pridevima</p></div>
+  </div>
+  <div class="card-grid cols2">
+    <div class="card">
+      <h3>Porodica — Family</h3>
+      <div class="vocab-strip" style="margin-top:.5rem">
+        <div class="vc"><div class="sr">mama / majka</div><div class="en">mum / mother</div><div class="de">die Mama / Mutter</div><span class="gend tag-z" style="font-size:.68rem;padding:1px 6px;border-radius:8px">Ž</span></div>
+        <div class="vc"><div class="sr">tata / otac</div><div class="en">dad / father</div><div class="de">der Papa / Vater</div><span class="gend tag-m" style="font-size:.68rem;padding:1px 6px;border-radius:8px">M</span></div>
+        <div class="vc"><div class="sr">brat</div><div class="en">brother</div><div class="de">der Bruder</div><span class="gend tag-m" style="font-size:.68rem;padding:1px 6px;border-radius:8px">M</span></div>
+        <div class="vc"><div class="sr">sestra</div><div class="en">sister</div><div class="de">die Schwester</div><span class="gend tag-z" style="font-size:.68rem;padding:1px 6px;border-radius:8px">Ž</span></div>
+        <div class="vc"><div class="sr">sin</div><div class="en">son</div><div class="de">der Sohn</div><span class="gend tag-m" style="font-size:.68rem;padding:1px 6px;border-radius:8px">M</span></div>
+        <div class="vc"><div class="sr">kćerka</div><div class="en">daughter</div><div class="de">die Tochter</div><span class="gend tag-z" style="font-size:.68rem;padding:1px 6px;border-radius:8px">Ž</span></div>
+        <div class="vc"><div class="sr">baka</div><div class="en">grandma</div><div class="de">die Oma</div><span class="gend tag-z" style="font-size:.68rem;padding:1px 6px;border-radius:8px">Ž</span></div>
+        <div class="vc"><div class="sr">deda</div><div class="en">grandpa</div><div class="de">der Opa</div><span class="gend tag-m" style="font-size:.68rem;padding:1px 6px;border-radius:8px">M</span></div>
+        <div class="vc"><div class="sr">ujak</div><div class="en">uncle</div><div class="de">der Onkel</div><span class="gend tag-m" style="font-size:.68rem;padding:1px 6px;border-radius:8px">M</span></div>
+        <div class="vc"><div class="sr">tetka</div><div class="en">aunt</div><div class="de">die Tante</div><span class="gend tag-z" style="font-size:.68rem;padding:1px 6px;border-radius:8px">Ž</span></div>
+        <div class="vc"><div class="sr">dete</div><div class="en">child</div><div class="de">das Kind</div><span class="gend tag-sr" style="font-size:.68rem;padding:1px 6px;border-radius:8px">Sr</span></div>
+        <div class="vc"><div class="sr">deca</div><div class="en">children (pl.)</div><div class="de">die Kinder</div><span class="gend tag-z" style="font-size:.68rem;padding:1px 6px;border-radius:8px">pl.</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Boje — Colors</h3>
+      <p style="font-size:.8rem;color:var(--mid);margin-bottom:.75rem">Format: M / Ž / Sr — pridev se menja!</p>
+      <div style="display:flex;flex-direction:column;gap:.5rem">
+        <div style="display:flex;align-items:center;gap:.7rem;padding:.45rem .7rem;border-radius:8px;background:#1C2833;color:white;font-size:.9rem"><div style="width:18px;height:18px;border-radius:4px;background:#111;border:1px solid #555;flex-shrink:0"></div><div><strong>crn / crna / crno</strong> <span style="font-size:.78rem;opacity:.8">— black</span></div></div>
+        <div style="display:flex;align-items:center;gap:.7rem;padding:.45rem .7rem;border-radius:8px;background:#f8f8f8;border:1px solid #ddd;font-size:.9rem"><div style="width:18px;height:18px;border-radius:4px;background:#fff;border:1px solid #ccc;flex-shrink:0"></div><div style="color:#333"><strong>beo / bela / belo</strong> <span style="font-size:.78rem;color:#666">— white</span></div></div>
+        <div style="display:flex;align-items:center;gap:.7rem;padding:.45rem .7rem;border-radius:8px;background:#EBF5FB;font-size:.9rem"><div style="width:18px;height:18px;border-radius:4px;background:#3b82f6;flex-shrink:0"></div><div style="color:#1d4ed8"><strong>plav / plava / plavo</strong> <span style="font-size:.78rem;opacity:.8">— blue</span></div></div>
+        <div style="display:flex;align-items:center;gap:.7rem;padding:.45rem .7rem;border-radius:8px;background:#EAFAF1;font-size:.9rem"><div style="width:18px;height:18px;border-radius:4px;background:#22c55e;flex-shrink:0"></div><div style="color:#065f46"><strong>zelen / zelena / zeleno</strong> <span style="font-size:.78rem;opacity:.8">— green</span></div></div>
+        <div style="display:flex;align-items:center;gap:.7rem;padding:.45rem .7rem;border-radius:8px;background:#FEFCE8;font-size:.9rem"><div style="width:18px;height:18px;border-radius:4px;background:#eab308;flex-shrink:0"></div><div style="color:#713f12"><strong>žut / žuta / žuto</strong> <span style="font-size:.78rem;opacity:.8">— yellow</span></div></div>
+        <div style="display:flex;align-items:center;gap:.7rem;padding:.45rem .7rem;border-radius:8px;background:#FFF1F2;font-size:.9rem"><div style="width:18px;height:18px;border-radius:4px;background:#ef4444;flex-shrink:0"></div><div style="color:#991b1b"><strong>crven / crvena / crveno</strong> <span style="font-size:.78rem;opacity:.8">— red</span></div></div>
+        <div style="display:flex;align-items:center;gap:.7rem;padding:.45rem .7rem;border-radius:8px;background:#F3F4F6;font-size:.9rem"><div style="width:18px;height:18px;border-radius:4px;background:#9ca3af;flex-shrink:0"></div><div style="color:#374151"><strong>siv / siva / sivo</strong> <span style="font-size:.78rem;opacity:.8">— grey</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 4: TEKST ZA ČITANJE -->
+<div class="slide" id="s4">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-sage">📖</div>
+    <div class="sec-hdr-text"><h2>Tekst za čitanje</h2><p>Moja porodica i naš pas · A1–A2 · ~130 reči</p></div>
+  </div>
+  <div class="legend">
+    <span class="leg"><span class="leg-dot" style="background:#1D9E75"></span>IMATI</span>
+    <span class="leg"><span class="leg-dot" style="background:#534AB7"></span>Rod M/Ž/Sr</span>
+    <span class="leg"><span class="leg-dot" style="background:#D4537E"></span>Porodica</span>
+    <span class="leg"><span class="leg-dot" style="background:#BA7517"></span>Boja</span>
+  </div>
+  <div class="trans-toggle">
+    <span style="font-size:.8rem;color:var(--mid);line-height:26px;margin-right:4px">Prevod:</span>
+    <button class="ttbtn" onclick="toggleTrans('en',this)">🇬🇧 English</button>
+    <button class="ttbtn" onclick="toggleTrans('de',this)">🇩🇪 Deutsch</button>
+  </div>
+  <div class="reading-text">
+    <p>Zovem se Marle i <span class="hl-imati">imam</span> veliku <span class="hl-fam">porodicu</span>. <span class="hl-imati">Imam</span> <span class="hl-rod">brata</span><sup style="font-size:.7rem;color:#534AB7">M</sup> i <span class="hl-rod">sestru</span><sup style="font-size:.7rem;color:#534AB7">Ž</sup>. Moj <span class="hl-fam">brat</span> se zove Max i <span class="hl-imati">ima</span> dvadeset i sedam godina. Moja <span class="hl-fam">sestra</span> se zove Lena i <span class="hl-imati">ima</span> dvadeset i tri godine.</p>
+    <p>Moji <span class="hl-fam">roditelji</span> žive u Hamburgu. Moja <span class="hl-fam">mama</span> <span class="hl-imati">ima</span> <span class="hl-boje">crnu</span> <span class="hl-rod">mačku</span><sup style="font-size:.7rem;color:#534AB7">Ž</sup>. <span class="hl-fam">Mačka</span> se zove Luna. Moj <span class="hl-fam">tata</span> <span class="hl-imati">ima</span> <span class="hl-boje">belog</span> <span class="hl-rod">psa</span><sup style="font-size:.7rem;color:#534AB7">M</sup>. <span class="hl-fam">Pas</span> se zove Bruno — on je <span class="hl-boje">beo</span> i veoma velik.</p>
+    <p>Ja živim u Berlinu. <span class="hl-imati">Nemam</span> <span class="hl-rod">ljubimca</span><sup style="font-size:.7rem;color:#534AB7">M</sup>, ali <span class="hl-imati">imam</span> mali <span class="hl-boje">zelen</span> <span class="hl-rod">stan</span><sup style="font-size:.7rem;color:#534AB7">M</sup>. Moja <span class="hl-fam">baka</span> i <span class="hl-fam">deda</span> žive u Srbiji. Oni <span class="hl-imati">imaju</span> veliku <span class="hl-boje">zelenu</span> <span class="hl-rod">kuću</span><sup style="font-size:.7rem;color:#534AB7">Ž</sup> i <span class="hl-boje">žutu</span> <span class="hl-rod">baštu</span><sup style="font-size:.7rem;color:#534AB7">Ž</sup>.</p>
+    <p>Moj <span class="hl-fam">ujak</span> Nikola <span class="hl-imati">ima</span> <span class="hl-rod">kćerku</span><sup style="font-size:.7rem;color:#534AB7">Ž</sup> i <span class="hl-rod">sina</span><sup style="font-size:.7rem;color:#534AB7">M</sup>. Njegova <span class="hl-fam">kćerka</span> Ana <span class="hl-imati">ima</span> osam godina. Njegov <span class="hl-fam">sin</span> Petar <span class="hl-imati">ima</span> pet godina. Ana i Petar <span class="hl-imati">imaju</span> <span class="hl-boje">sivu</span> <span class="hl-rod">zečicu</span><sup style="font-size:.7rem;color:#534AB7">Ž</sup>.</p>
+    <p>Volim svoju <span class="hl-fam">porodicu</span>. <span class="hl-imati">Imamo</span> srećnu porodicu — od Berlina do Beograda.</p>
+  </div>
+  <div class="trans-block" id="trans-en">
+    <div class="trow"><span class="flag">🇬🇧</span><span>My name is Marle and I have a big family. I have a brother and a sister. My brother Max is twenty-seven. My sister Lena is twenty-three.<br><br>My parents live in Hamburg. My mum has a black cat called Luna. My dad has a white dog — Bruno, who is very big.<br><br>I live in Berlin. I don't have a pet, but I have a small green apartment. My grandma and grandpa live in Serbia. They have a big green house and a yellow garden.<br><br>My uncle Nikola has a daughter and a son. His daughter Ana is eight. His son Petar is five. Ana and Petar have a grey rabbit named Siva.<br><br>I love my family. We have a happy family — from Berlin to Belgrade.</span></div>
+  </div>
+  <div class="trans-block" id="trans-de">
+    <div class="trow"><span class="flag">🇩🇪</span><span>Ich heiße Marle und ich habe eine große Familie. Ich habe einen Bruder und eine Schwester. Mein Bruder Max ist siebenundzwanzig. Meine Schwester Lena ist dreiundzwanzig.<br><br>Meine Eltern wohnen in Hamburg. Meine Mutter hat eine schwarze Katze namens Luna. Mein Vater hat einen weißen Hund — Bruno, der sehr groß ist.<br><br>Ich wohne in Berlin. Ich habe kein Haustier, aber ich habe eine kleine grüne Wohnung. Meine Oma und mein Opa wohnen in Serbien. Sie haben ein großes grünes Haus und einen gelben Garten.<br><br>Mein Onkel Nikola hat eine Tochter und einen Sohn. Seine Tochter Ana ist acht. Sein Sohn Petar ist fünf. Ana und Petar haben eine graue Häsin namens Siva.<br><br>Ich liebe meine Familie. Wir haben eine glückliche Familie — von Berlin bis Belgrad.</span></div>
+  </div>
+</div>
+
+<!-- 5: VEŽBA 1 — POPUNI IMATI -->
+<div class="slide" id="s5">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-berry">✏️</div>
+    <div class="sec-hdr-text"><h2>Vežba 1 — Popuni prazninu</h2><p>Stavi tačan oblik glagola IMATI</p></div>
+  </div>
+  <div class="ex-block">
+    <div class="ex-title">Popuni prazninu sa tačnim oblikom IMATI</div>
+    <div class="ex-instr">imam · imaš · ima · imamo · imate · imaju · nemam</div>
+    <div id="fill-form">
+      <div class="fill-row"><span class="fill-num">1.</span><span class="fill-sent">Ja <input class="fill-blank" id="f1" data-ans="imam" placeholder="___"> sestru.</span></div>
+      <div class="fill-row"><span class="fill-num">2.</span><span class="fill-sent">Ti <input class="fill-blank" id="f2" data-ans="imaš" placeholder="___"> brata?</span></div>
+      <div class="fill-row"><span class="fill-num">3.</span><span class="fill-sent">Ona <input class="fill-blank" id="f3" data-ans="ima" placeholder="___"> crnu mačku.</span></div>
+      <div class="fill-row"><span class="fill-num">4.</span><span class="fill-sent">Mi <input class="fill-blank" id="f4" data-ans="imamo" placeholder="___"> veliku porodicu.</span></div>
+      <div class="fill-row"><span class="fill-num">5.</span><span class="fill-sent">Oni <input class="fill-blank" id="f5" data-ans="imaju" placeholder="___"> psa koji se zove Bruno.</span></div>
+      <div class="fill-row"><span class="fill-num">6.</span><span class="fill-sent">Vi <input class="fill-blank" id="f6" data-ans="imate" placeholder="___"> baku i dedu u Srbiji?</span></div>
+      <div class="fill-row"><span class="fill-num">7.</span><span class="fill-sent">Ja <input class="fill-blank" id="f7" data-ans="nemam" placeholder="___"> ljubimca, ali imam zeleni stan.</span></div>
+    </div>
+    <button class="check-btn" onclick="checkFill()">Proveri odgovore ✓</button>
+    <div class="feedback" id="fill-fb"></div>
+  </div>
+</div>
+
+<!-- 6: VEŽBA 2 — ROD IMENICA -->
+<div class="slide" id="s6">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-rose">📚</div>
+    <div class="sec-hdr-text"><h2>Vežba 2 — Koji je rod?</h2><p>Klikni M, Ž ili Sr za svaku imenicu</p></div>
+  </div>
+  <div class="ex-block">
+    <div class="ex-title">Odredi rod svake imenice</div>
+    <div class="ex-instr">M = muški (suglasnik) · Ž = ženski (-a) · Sr = srednji (-o, -e)</div>
+    <div id="gender-form"></div>
+    <button class="check-btn" onclick="checkGender()">Proveri ✓</button>
+    <div class="feedback" id="gender-fb"></div>
+  </div>
+</div>
+
+<!-- 7: VEŽBA 3 — MATCH BOJE -->
+<div class="slide" id="s7">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-gold">🎨</div>
+    <div class="sec-hdr-text"><h2>Vežba 3 — Spoji boje!</h2><p>Spoji srpsku boju sa engleskim prevodom</p></div>
+  </div>
+  <div class="ex-block">
+    <div class="ex-title">Klikni srpsku reč, pa engleski prevod</div>
+    <div class="match-grid">
+      <div class="match-col" id="match-sr"></div>
+      <div class="match-col" id="match-en"></div>
+    </div>
+    <div class="match-score" id="match-score">0 / 7 spojeno</div>
+  </div>
+  <div class="tip" style="margin-top:1rem">💡 <strong>Zapamti:</strong> Boje se menjaju po rodu! <em>crn pas · crna mačka · crno dete</em></div>
+</div>
+
+<!-- 8: VEŽBA 4 — PREVEDI -->
+<div class="slide" id="s8">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-sage">🌍</div>
+    <div class="sec-hdr-text"><h2>Vežba 4 — Prevedi na srpski</h2><p>Napiši prevod, pa otkrij odgovor</p></div>
+  </div>
+  <div class="ex-block">
+    <div class="ex-title">Prevedi rečenice na srpski</div>
+    <div class="ex-instr">Piši slobodno — pritisni "Otkrij" kad si gotova</div>
+    <div id="transl-form">
+      <div class="transl-row"><div class="transl-en">1. I have a brother and a sister.</div><input class="transl-input" id="t1" placeholder="Ja ..."><div class="feedback" id="tf1" style="margin-top:.4rem;font-size:.83rem;padding:.5rem .8rem"></div></div>
+      <div class="transl-row"><div class="transl-en">2. She has a black cat.</div><input class="transl-input" id="t2" placeholder="Ona ..."><div class="feedback" id="tf2" style="margin-top:.4rem;font-size:.83rem;padding:.5rem .8rem"></div></div>
+      <div class="transl-row"><div class="transl-en">3. Do you have a sister?</div><input class="transl-input" id="t3" placeholder="Imaš ..."><div class="feedback" id="tf3" style="margin-top:.4rem;font-size:.83rem;padding:.5rem .8rem"></div></div>
+      <div class="transl-row"><div class="transl-en">4. We have a big family.</div><input class="transl-input" id="t4" placeholder="Mi ..."><div class="feedback" id="tf4" style="margin-top:.4rem;font-size:.83rem;padding:.5rem .8rem"></div></div>
+      <div class="transl-row"><div class="transl-en">5. I don't have a pet.</div><input class="transl-input" id="t5" placeholder="Nemam ..."><div class="feedback" id="tf5" style="margin-top:.4rem;font-size:.83rem;padding:.5rem .8rem"></div></div>
+    </div>
+    <button class="check-btn" onclick="revealAll()">Otkrij sve odgovore</button>
+  </div>
+</div>
+
+<!-- 9: KRAJ -->
+<div class="slide" id="s9">
+  <div class="congrats">
+    <div class="big">Odlično! 🌸</div>
+    <p>Završila si lekciju Nedelje 2. Evo šta si naučila danas:</p>
+    <ul class="done-list">
+      <li><span class="chk">✓</span>Svih 6 oblika glagola IMATI (+ nemam)</li>
+      <li><span class="chk">✓</span>Rod imenica — pravilo nastavka M/Ž/Sr</li>
+      <li><span class="chk">✓</span>12 članova porodice sa rodom</li>
+      <li><span class="chk">✓</span>7 boja — pridev se slaže sa imenicama</li>
+      <li><span class="chk">✓</span>Tekst o porodici — čitanje i razumevanje</li>
+      <li><span class="chk">✓</span>4 vežbe: popunjavanje, rod, spajanje, prevod</li>
+    </ul>
+    <div style="margin-top:1.5rem;padding:1rem 1.25rem;background:var(--cream2);border-radius:12px;max-width:420px;margin-left:auto;margin-right:auto">
+      <div style="font-size:.85rem;font-weight:500;color:var(--berry);margin-bottom:.5rem">Za kod kuće 🏠</div>
+      <div style="font-size:.83rem;color:var(--mid);line-height:1.7">📱 Anki Set 1 + Set 2 svaki dan<br>🎵 Zdravko Čolić — "Šta bi dao da si na mom mestu"<br>✍️ Napiši 5-6 rečenica o svojoj porodici</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end stage -->
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button class="nav-btn nav-prev" id="btn-prev" onclick="go(-1)">← Nazad</button>
+  <span class="slide-counter" id="counter">1 / 10</span>
+  <button class="nav-btn nav-next" id="btn-next" onclick="go(1)">Napred →</button>
+</div>
+
+<script>
+const TOTAL = 10;
+let cur = 0;
+
+const slides = Array.from(document.querySelectorAll('.slide'));
+const pbar = document.getElementById('pbar');
+const counter = document.getElementById('counter');
+const stepper = document.getElementById('stepper');
+
+for(let i = 0; i < TOTAL; i++){
+  const d = document.createElement('button');
+  d.className = 'step-dot' + (i === 0 ? ' active' : '');
+  d.onclick = (function(idx){ return function(){ jumpTo(idx); }; })(i);
+  stepper.appendChild(d);
+}
+
+function updateUI(){
+  slides.forEach((s, i) => s.classList.toggle('active', i === cur));
+  const dots = stepper.querySelectorAll('.step-dot');
+  dots.forEach((d, i) => {
+    d.classList.toggle('active', i === cur);
+    d.classList.toggle('done', i < cur);
+  });
+  pbar.style.width = ((cur / (TOTAL - 1)) * 100) + '%';
+  counter.textContent = (cur + 1) + ' / ' + TOTAL;
+  document.getElementById('btn-prev').style.visibility = cur === 0 ? 'hidden' : 'visible';
+  document.getElementById('btn-next').textContent = cur === TOTAL - 1 ? '🌸 Završi' : 'Napred →';
+  window.scrollTo(0, 0);
+}
+
+function go(dir){ cur = Math.max(0, Math.min(TOTAL - 1, cur + dir)); updateUI(); }
+function jumpTo(i){ cur = i; updateUI(); }
+updateUI();
+
+/* ── FILL EXERCISE ── */
+function checkFill(){
+  const inputs = document.querySelectorAll('#fill-form .fill-blank');
+  let ok = 0;
+  inputs.forEach(inp => {
+    const v = inp.value.trim().toLowerCase();
+    const a = inp.dataset.ans.toLowerCase();
+    if(v === a){ inp.classList.add('correct'); inp.classList.remove('wrong'); ok++; }
+    else if(v){ inp.classList.add('wrong'); inp.classList.remove('correct'); }
+  });
+  const fb = document.getElementById('fill-fb');
+  fb.className = 'feedback show ' + (ok === inputs.length ? 'ok' : 'nope');
+  fb.textContent = ok === inputs.length
+    ? 'Bravo! Sve tačno! 🎉'
+    : ok + ' / ' + inputs.length + ' tačno. Provjeri crvena polja i pokušaj ponovo.';
+}
+
+/* ── GENDER EXERCISE ── */
+const gWords = [
+  {w:'mama', g:'Ž'}, {w:'brat', g:'M'}, {w:'pas', g:'M'}, {w:'mačka', g:'Ž'},
+  {w:'dete', g:'Sr'}, {w:'sestra', g:'Ž'}, {w:'otac', g:'M'}, {w:'ime', g:'Sr'},
+  {w:'ptica', g:'Ž'}, {w:'konj', g:'M'}
+];
+const gForm = document.getElementById('gender-form');
+gWords.forEach((item, i) => {
+  const row = document.createElement('div');
+  row.className = 'gender-word';
+  row.innerHTML = '<span class="word">' + (i+1) + '. <strong>' + item.w + '</strong></span>'
+    + '<div class="gender-opts">'
+    + '<button class="gbtn" id="g' + i + 'M" data-g="M" onclick="selGender(' + i + ',\'M\')">M</button>'
+    + '<button class="gbtn" id="g' + i + 'Z" data-g="Ž" onclick="selGender(' + i + ',\'Ž\')">Ž</button>'
+    + '<button class="gbtn" id="g' + i + 'Sr" data-g="Sr" onclick="selGender(' + i + ',\'Sr\')">Sr</button>'
+    + '</div>';
+  gForm.appendChild(row);
+});
+
+function selGender(i, g){
+  const ids = ['M', 'Ž', 'Sr'];
+  ids.forEach(v => {
+    const btn = document.getElementById('g' + i + (v === 'Ž' ? 'Z' : v));
+    const selClass = 'sel-' + (v === 'Ž' ? 'z' : v.toLowerCase());
+    btn.className = 'gbtn' + (g === v ? ' ' + selClass : '');
+  });
+}
+
+function checkGender(){
+  let ok = 0;
+  gWords.forEach((item, i) => {
+    const btns = ['M', 'Ž', 'Sr'].map(v => document.getElementById('g' + i + (v === 'Ž' ? 'Z' : v)));
+    const selBtn = btns.find(b => b.className.includes('sel-'));
+    if(selBtn && selBtn.dataset.g === item.g){ selBtn.className += ' correct'; ok++; }
+    else { btns.forEach(b => { if(b.className.includes('sel-')) b.className += ' wrong'; }); }
+  });
+  const fb = document.getElementById('gender-fb');
+  fb.className = 'feedback show ' + (ok === gWords.length ? 'ok' : 'nope');
+  fb.textContent = ok === gWords.length
+    ? 'Savršeno! Svi rodovi tačni! 🌟'
+    : ok + ' / ' + gWords.length + ' tačno.';
+}
+
+/* ── MATCH EXERCISE ── */
+const matchPairs = [
+  ['crn/crna/crno','black'], ['beo/bela/belo','white'], ['plav/plava/plavo','blue'],
+  ['zelen/zelena/zeleno','green'], ['žut/žuta/žuto','yellow'],
+  ['crven/crvena/crveno','red'], ['siv/siva/sivo','grey']
+];
+let selSr = null, selEn = null, matched = 0;
+const srCol = document.getElementById('match-sr');
+const enCol = document.getElementById('match-en');
+
+function shuffle(a){ return [...a].sort(() => Math.random() - .5); }
+
+shuffle([...matchPairs]).forEach(([s, e]) => {
+  const d = document.createElement('div');
+  d.className = 'match-item'; d.textContent = s; d.dataset.key = s;
+  d.onclick = function(){ pickSr(d); };
+  srCol.appendChild(d);
+});
+shuffle([...matchPairs]).forEach(([s, e]) => {
+  const d = document.createElement('div');
+  d.className = 'match-item'; d.textContent = e; d.dataset.key = s;
+  d.onclick = function(){ pickEn(d); };
+  enCol.appendChild(d);
+});
+
+function pickSr(el){
+  if(el.classList.contains('matched')) return;
+  document.querySelectorAll('#match-sr .match-item').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected'); selSr = el;
+  if(selEn) tryMatch();
+}
+function pickEn(el){
+  if(el.classList.contains('matched')) return;
+  document.querySelectorAll('#match-en .match-item').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected'); selEn = el;
+  if(selSr) tryMatch();
+}
+function tryMatch(){
+  if(selSr.dataset.key === selEn.dataset.key){
+    [selSr, selEn].forEach(e => { e.classList.add('matched'); e.classList.remove('selected'); });
+    matched++;
+    document.getElementById('match-score').textContent = matched === 7
+      ? '🎉 Sve spojeno! Odlično!'
+      : matched + ' / 7 spojeno';
+  } else {
+    [selSr, selEn].forEach(e => {
+      e.classList.add('wrong-flash');
+      setTimeout(() => e.classList.remove('wrong-flash', 'selected'), 600);
+    });
+  }
+  selSr = null; selEn = null;
+}
+
+/* ── TRANSLATE EXERCISE ── */
+const answers = {
+  t1: 'Ja imam brata i sestru.',
+  t2: 'Ona ima crnu mačku.',
+  t3: 'Imaš li sestru? / Da li imaš sestru?',
+  t4: 'Mi imamo veliku porodicu.',
+  t5: 'Nemam ljubimca.'
+};
+function revealAll(){
+  Object.entries(answers).forEach(([id, ans]) => {
+    const inp = document.getElementById(id);
+    inp.value = ''; inp.className = 'transl-input revealed';
+    const fb = document.getElementById('tf' + id.slice(1));
+    fb.className = 'feedback show ok'; fb.textContent = '✓ ' + ans;
+  });
+}
+
+/* ── TRANS TOGGLE ── */
+function toggleTrans(lang, btn){
+  const el = document.getElementById('trans-' + lang);
+  const isOn = el.classList.toggle('show');
+  btn.classList.toggle('on', isOn);
+}
+</script>
+</body>
+</html>
