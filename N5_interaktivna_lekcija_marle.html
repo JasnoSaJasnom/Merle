@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Srpski · Nedelja 5 · Marle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --berry:#6D2E46;--rose:#A26769;--cream:#F5ECD7;--cream2:#EDE0CC;
+  --gold:#C4975A;--sage:#7A9E87;--dark:#2C1810;--mid:#7A5C5C;
+  --white:#fff;--blush:#E8C4C4;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);min-height:100vh;color:var(--dark)}
+.top-bar{background:var(--berry);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:52px;position:sticky;top:0;z-index:100}
+.top-bar-title{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--cream)}
+.top-bar .week{font-size:.75rem;color:#E8C4C4;font-weight:300}
+.progress-bar{height:3px;background:var(--gold);transition:width .4s ease;position:absolute;bottom:0;left:0}
+.stepper{display:flex;gap:6px;align-items:center}
+.step-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:all .2s;border:none;padding:0}
+.step-dot.active{background:var(--gold);transform:scale(1.3)}
+.step-dot.done{background:var(--sage)}
+.stage{max-width:860px;margin:0 auto;padding:1.5rem 1rem 5rem}
+.slide{display:none;animation:fadeIn .35s ease}
+.slide.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.slide-hero{text-align:center;padding:2.5rem 1rem}
+.slide-hero .num{font-size:3.5rem;font-family:'Playfair Display',serif;color:var(--berry);line-height:1;margin-bottom:.5rem}
+.slide-hero h2{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:600;color:var(--dark);margin-bottom:.6rem}
+.slide-hero p{color:var(--mid);font-size:1rem;line-height:1.7;max-width:520px;margin:0 auto 1.5rem}
+.hero-chips{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center}
+.chip{padding:.3rem .8rem;border-radius:20px;font-size:.8rem;font-weight:500}
+.chip-teal{background:#E1F5EE;color:#0F6E56}
+.chip-purple{background:#EEEDFE;color:#3C3489}
+.chip-pink{background:#FBEAF0;color:#72243E}
+.chip-amber{background:#FAEEDA;color:#633806}
+.chip-blue{background:#EBF5FB;color:#1A5276}
+.card{background:var(--white);border-radius:14px;padding:1.2rem 1.3rem;border:1px solid var(--blush)}
+.card h3{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--berry);margin-bottom:.7rem}
+.card-grid{display:grid;gap:1rem;margin-top:1rem}
+.card-grid.cols2{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.ptable{width:100%;border-collapse:collapse;margin:.75rem 0;font-size:.88rem}
+.ptable th{background:var(--berry);color:var(--cream);padding:.5rem .8rem;text-align:left;font-weight:500;font-size:.78rem}
+.ptable td{padding:.45rem .8rem;border-bottom:1px solid var(--cream2)}
+.ptable tr:nth-child(even) td{background:var(--cream2)}
+.ptable .vb{font-weight:700;color:var(--berry)}
+.ptable .vbr{font-weight:700;color:#991b1b}
+.ptable .vbg{font-weight:700;color:#0E6655}
+.ptable .ex{color:var(--mid);font-size:.82rem;font-style:italic}
+.reading-text{background:var(--white);border-radius:14px;padding:1.5rem 1.7rem;border:1px solid var(--blush);font-size:1.05rem;line-height:1.9}
+.reading-text p{margin-bottom:1rem}
+.reading-text p:last-child{margin-bottom:0}
+.hl-perf{font-weight:600;color:#991b1b;border-bottom:2px solid #fca5a5}
+.hl-lok{font-weight:600;color:#3C3489;border-bottom:2px solid #AFA9EC}
+.hl-time{font-weight:600;color:#633806;border-bottom:2px solid #EF9F27}
+.hl-voc{font-weight:600;color:#0F6E56;border-bottom:2px solid #5DCAA5}
+.trans-toggle{margin:1rem 0 .5rem;display:flex;gap:.5rem;flex-wrap:wrap}
+.ttbtn{font-size:.78rem;padding:.3rem .75rem;border-radius:20px;border:1px solid var(--blush);background:transparent;color:var(--mid);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+.ttbtn:hover,.ttbtn.on{background:var(--berry);color:var(--cream);border-color:var(--berry)}
+.trans-block{background:var(--cream2);border-radius:10px;padding:1rem 1.2rem;margin-top:.5rem;font-size:.9rem;line-height:1.7;color:var(--mid);display:none}
+.trans-block.show{display:block}
+.ex-block{background:var(--white);border-radius:14px;padding:1.4rem 1.5rem;border:1px solid var(--blush);margin-bottom:1rem}
+.ex-title{font-family:'Playfair Display',serif;font-size:1rem;color:var(--berry);margin-bottom:.3rem}
+.ex-instr{font-size:.85rem;color:var(--mid);margin-bottom:1rem;font-style:italic}
+.fill-row{display:grid;grid-template-columns:28px 1fr;gap:.5rem;align-items:baseline;margin-bottom:.65rem;font-size:.93rem}
+.fill-num{color:var(--rose);font-weight:500;text-align:right}
+.fill-blank{display:inline-block;border:none;border-bottom:2px solid var(--blush);width:130px;text-align:center;font-family:'DM Sans',sans-serif;font-size:.88rem;color:var(--dark);background:transparent;outline:none;transition:border-color .2s}
+.fill-blank:focus{border-color:var(--berry)}
+.fill-blank.correct{border-color:var(--sage);color:#0F6E56}
+.fill-blank.wrong{border-color:#E24B4A;color:#E24B4A}
+.check-btn{margin-top:1rem;padding:.5rem 1.2rem;background:var(--berry);color:var(--cream);border:none;border-radius:20px;font-family:'DM Sans',sans-serif;font-size:.85rem;cursor:pointer;transition:opacity .15s}
+.check-btn:hover{opacity:.85}
+.feedback{margin-top:.75rem;font-size:.85rem;padding:.6rem 1rem;border-radius:8px;display:none}
+.feedback.show{display:block}
+.feedback.ok{background:#E1F5EE;color:#0F6E56}
+.feedback.nope{background:#FCEBEB;color:#A32D2D}
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.match-col{display:flex;flex-direction:column;gap:.5rem}
+.match-item{padding:.5rem .9rem;border-radius:8px;border:1.5px solid var(--blush);background:var(--cream2);font-size:.88rem;cursor:pointer;transition:all .2s;user-select:none;line-height:1.4}
+.match-item.selected{background:var(--berry);color:var(--cream);border-color:var(--berry)}
+.match-item.matched{background:var(--sage);color:var(--white);border-color:var(--sage);cursor:default}
+.match-item.wrong-flash{background:#FCEBEB;border-color:#E24B4A}
+.match-score{font-size:.85rem;color:var(--mid);margin-top:.75rem}
+.transl-row{margin-bottom:.9rem}
+.transl-en{font-size:.9rem;color:var(--mid);margin-bottom:.3rem}
+.transl-input{width:100%;padding:.45rem .7rem;border:1.5px solid var(--blush);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.9rem;background:transparent;color:var(--dark);outline:none;transition:border-color .2s}
+.transl-input:focus{border-color:var(--berry)}
+.transl-input.revealed{border-color:var(--sage);background:#E1F5EE;color:#0F6E56}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--cream2);padding:.7rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
+.nav-btn{padding:.55rem 1.3rem;border-radius:22px;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:500;cursor:pointer;transition:all .18s;border:none}
+.nav-prev{background:var(--cream2);color:var(--mid)}
+.nav-prev:hover{background:var(--blush)}
+.nav-next{background:var(--berry);color:var(--cream)}
+.nav-next:hover{opacity:.88}
+.slide-counter{font-size:.82rem;color:var(--mid)}
+.sec-hdr{display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem}
+.sec-icon{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;color:var(--white)}
+.bg-berry{background:var(--berry)} .bg-sage{background:var(--sage)} .bg-gold{background:var(--gold)}
+.bg-rose{background:var(--rose)} .bg-blue{background:#1d4ed8} .bg-purple{background:#534AB7}
+.bg-teal{background:#0E6655} .bg-red{background:#991b1b}
+.sec-hdr-text h2{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--dark)}
+.sec-hdr-text p{font-size:.83rem;color:var(--mid)}
+.tip{background:#EEEDFE;border-left:3px solid #7F77DD;border-radius:0 10px 10px 0;padding:.7rem 1rem;font-size:.85rem;color:#3C3489;margin:1rem 0;line-height:1.6}
+.tip-gold{background:#FAEEDA;border-left:3px solid #EF9F27;border-radius:0 10px 10px 0;padding:.7rem 1rem;font-size:.85rem;color:#633806;margin:1rem 0;line-height:1.6}
+.tip-green{background:#EAFAF1;border-left:3px solid #1D9E75;border-radius:0 10px 10px 0;padding:.7rem 1rem;font-size:.85rem;color:#0E6655;margin:1rem 0;line-height:1.6}
+.tip-red{background:#FCEBEB;border-left:3px solid #E24B4A;border-radius:0 10px 10px 0;padding:.7rem 1rem;font-size:.85rem;color:#991b1b;margin:1rem 0;line-height:1.6}
+.legend{display:flex;flex-wrap:wrap;gap:.6rem;margin:.5rem 0 1rem;align-items:center}
+.leg{display:flex;align-items:center;gap:4px;font-size:.77rem;color:var(--mid)}
+.leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.formula-box{background:var(--berry);color:var(--cream);border-radius:14px;padding:1.2rem 1.5rem;text-align:center;margin:1rem 0}
+.formula-box .f-main{font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:.4rem}
+.formula-box .f-sub{font-size:.85rem;opacity:.8}
+.gpr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.5rem;margin:.75rem 0}
+.gpr-card{background:var(--white);border:1px solid var(--cream2);border-radius:10px;padding:.55rem .85rem}
+.gpr-inf{font-size:.8rem;color:var(--mid);margin-bottom:.2rem}
+.gpr-forms{display:flex;gap:.4rem;font-size:.88rem}
+.gform-m{color:#1d4ed8;font-weight:500}
+.gform-z{color:#991b1b;font-weight:600}
+.gform-sr{color:#0E6655;font-weight:500}
+.lok-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.55rem;margin:.75rem 0}
+.lok-card{border-radius:10px;padding:.6rem .85rem}
+.lok-nom{font-size:.78rem;color:var(--mid);margin-bottom:2px}
+.lok-lok{font-weight:600;font-size:.95rem}
+.minitest-row{display:grid;grid-template-columns:28px 1fr;gap:.5rem;align-items:baseline;margin-bottom:.7rem;font-size:.9rem}
+.mt-num{color:var(--gold);font-weight:600;text-align:right}
+.mt-blank{border:none;border-bottom:2px solid var(--blush);width:100px;text-align:center;font-family:'DM Sans',sans-serif;font-size:.88rem;background:transparent;outline:none;color:var(--dark)}
+.mt-blank:focus{border-color:var(--berry)}
+.congrats{text-align:center;padding:3rem 1rem}
+.congrats .big{font-family:'Playfair Display',serif;font-size:2.5rem;color:var(--berry);margin-bottom:.5rem}
+.congrats p{color:var(--mid);font-size:1rem;max-width:440px;margin:0 auto 1.5rem}
+.done-list{list-style:none;max-width:420px;margin:0 auto;text-align:left}
+.done-list li{display:flex;gap:.6rem;align-items:flex-start;margin-bottom:.55rem;font-size:.9rem}
+.done-list .chk{color:var(--sage);font-size:1rem;flex-shrink:0;margin-top:2px}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div>
+    <div class="top-bar-title">Srpski · Nedelja 5 · Faza 2</div>
+    <div class="week">Mini-test · Perfekat · Lokativ · Vikend</div>
+  </div>
+  <div class="stepper" id="stepper"></div>
+  <div class="progress-bar" id="pbar"></div>
+</div>
+
+<div class="stage">
+
+<!-- 0: WELCOME -->
+<div class="slide active" id="s0">
+  <div class="slide-hero">
+    <div class="num">5</div>
+    <h2>Faza 2 počinje! 🚀</h2>
+    <p>Prošla nedelja, prošli vikend, prošlo putovanje u Srbiju — <strong>perfekat</strong> ti daje glas u prošlosti. Ovo je veliki korak!</p>
+    <div class="hero-chips">
+      <span class="chip chip-pink">📋 Mini-test Faze 1</span>
+      <span class="chip chip-purple">⏪ Perfekat (prošlo vreme)</span>
+      <span class="chip chip-teal">📍 Lokativ — gde si bila?</span>
+      <span class="chip chip-amber">🌿 Vikend vokabular</span>
+    </div>
+  </div>
+  <div class="tip">🇩🇪 <strong>Nemačka paralela:</strong> "Ich bin gegangen" = "Išla sam" · "Ich habe gearbeitet" = "Radila sam" — ista struktura!</div>
+  <div class="tip-red">⚠️ <strong>Važno za tebe (Ž):</strong> Uvek koristiš ženski oblik GPR — završava na <strong>-la</strong>! Bila sam · radila sam · išla sam · slušala sam</div>
+</div>
+
+<!-- 1: MINI-TEST FAZE 1 -->
+<div class="slide" id="s1">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-gold">📋</div>
+    <div class="sec-hdr-text"><h2>Mini-test — Ponovi Fazu 1!</h2><p>8 pitanja bez gledanja u beleške — budi iskrena!</p></div>
+  </div>
+  <div class="ex-block">
+    <div class="ex-title">Popuni praznine — sve iz Faze 1</div>
+    <div class="ex-instr">Ovo nije ocenjivanje — to je mapa gde si. Pokušaj bez gledanja!</div>
+    <div id="mt-form">
+      <div class="minitest-row"><span class="mt-num">1.</span><span>Ja <input class="mt-blank" id="mt1" data-ans="sam" placeholder="___"> iz Nemačke i <input class="mt-blank" id="mt2" data-ans="imam" placeholder="___"> prijatelje u Srbiji.</span></div>
+      <div class="minitest-row"><span class="mt-num">2.</span><span><input class="mt-blank" id="mt3" data-ans="moja" placeholder="___"> sestra <input class="mt-blank" id="mt4" data-ans="je" placeholder="___"> lekarka.</span></div>
+      <div class="minitest-row"><span class="mt-num">3.</span><span>Ona <input class="mt-blank" id="mt5" data-ans="govori" placeholder="___"> srpski, engleski i nemački. <span style="font-size:.8rem;color:var(--mid)">(prezent)</span></span></div>
+      <div class="minitest-row"><span class="mt-num">4.</span><span>Putujem u Srbiju u <input class="mt-blank" id="mt6" data-ans="julu" placeholder="___"> svake godine.</span></div>
+      <div class="minitest-row"><span class="mt-num">5.</span><span>Volim srpsku muziku <input class="mt-blank" id="mt7" data-ans="jer" placeholder="___"> je veoma emotivna.</span></div>
+      <div class="minitest-row"><span class="mt-num">6.</span><span>Imam <input class="mt-blank" id="mt8" data-ans="brata" placeholder="___"> i <input class="mt-blank" id="mt9" data-ans="sestru" placeholder="___">. <span style="font-size:.8rem;color:var(--mid)">(akuzativ!)</span></span></div>
+      <div class="minitest-row"><span class="mt-num">7.</span><span><input class="mt-blank" id="mt10" data-ans="njihova" placeholder="___"> kuća je u Beogradu. <span style="font-size:.8rem;color:var(--mid)">(kuća = Ž)</span></span></div>
+      <div class="minitest-row"><span class="mt-num">8.</span><span>Idem <input class="mt-blank" id="mt11" data-ans="na" placeholder="___"> posao svaki dan.</span></div>
+    </div>
+    <button class="check-btn" onclick="checkMT()">Proveri ✓</button>
+    <div class="feedback" id="mt-fb"></div>
+  </div>
+</div>
+
+<!-- 2: PERFEKAT TVORBA -->
+<div class="slide" id="s2">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-red">⏪</div>
+    <div class="sec-hdr-text"><h2>Perfekat — prošlo vreme</h2><p>Kako se gradi i zašto je lako za tebe!</p></div>
+  </div>
+  <div class="formula-box">
+    <div class="f-main">BITI (prezent) + Glagolski pridev radni (GPR)</div>
+    <div class="f-sub">Ja <strong>sam</strong> + <strong>radila</strong> → Ja sam radila · Ona <strong>je</strong> + <strong>bila</strong> → Ona je bila</div>
+  </div>
+  <div class="card-grid cols2" style="margin-top:1rem">
+    <div class="card">
+      <h3 style="color:#991b1b">GPR — muški/ženski/srednji</h3>
+      <table class="ptable" style="margin-top:.5rem">
+        <tr><th>Rod</th><th>Nastavak</th><th>Primer</th></tr>
+        <tr><td>Muški (M)</td><td class="vb">-o</td><td class="ex">on je radio</td></tr>
+        <tr><td>Ženski (Ž) ⭐</td><td class="vbr">-la</td><td class="ex">ona je radila</td></tr>
+        <tr><td>Srednji (Sr)</td><td class="vbg">-lo</td><td class="ex">dete je radilo</td></tr>
+        <tr><td>Množina (M)</td><td class="vb">-li</td><td class="ex">oni su radili</td></tr>
+        <tr><td>Množina (Ž)</td><td class="vbr">-le</td><td class="ex">one su radile</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Ja — paradigma (raditi)</h3>
+      <div style="display:flex;flex-direction:column;gap:.45rem;margin-top:.5rem">
+        <div style="display:flex;justify-content:space-between;padding:.4rem .7rem;background:#FCEBEB;border-radius:8px;font-size:.9rem"><span style="color:#991b1b;font-weight:700">ja sam radila ⭐</span><span style="color:var(--mid);font-size:.8rem">I worked (Ž)</span></div>
+        <div style="display:flex;justify-content:space-between;padding:.4rem .7rem;background:var(--cream2);border-radius:8px;font-size:.9rem"><span>ti si radila/radio</span><span style="color:var(--mid);font-size:.8rem">you worked</span></div>
+        <div style="display:flex;justify-content:space-between;padding:.4rem .7rem;background:var(--cream2);border-radius:8px;font-size:.9rem"><span>ona je radila · on je radio</span><span style="color:var(--mid);font-size:.8rem">she/he worked</span></div>
+        <div style="display:flex;justify-content:space-between;padding:.4rem .7rem;background:var(--cream2);border-radius:8px;font-size:.9rem"><span>mi smo radili</span><span style="color:var(--mid);font-size:.8rem">we worked</span></div>
+        <div style="display:flex;justify-content:space-between;padding:.4rem .7rem;background:var(--cream2);border-radius:8px;font-size:.9rem"><span>vi ste radili</span><span style="color:var(--mid);font-size:.8rem">you worked (pl.)</span></div>
+        <div style="display:flex;justify-content:space-between;padding:.4rem .7rem;background:var(--cream2);border-radius:8px;font-size:.9rem"><span>oni su radili · one su radile</span><span style="color:var(--mid);font-size:.8rem">they worked</span></div>
+      </div>
+      <div style="margin-top:.75rem;background:#FCEBEB;border-radius:8px;padding:.5rem .7rem;font-size:.85rem;color:#991b1b">
+        🚫 Negacija: <strong>nisam radila</strong> · nisi bila · nije radio · nismo...
+      </div>
+    </div>
+  </div>
+  <div class="tip">🇩🇪 <strong>Paralela:</strong> "Ich bin gegangen" = "Išla sam" · "Ich habe gearbeitet" = "Radila sam" — potpuno ista logika!</div>
+</div>
+
+<!-- 3: GPR KLJUČNI GLAGOLI -->
+<div class="slide" id="s3">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-red">📚</div>
+    <div class="sec-hdr-text"><h2>GPR — ključni glagoli</h2><p>Muški · Ženski (-la) · Srednji — zapamti sve!</p></div>
+  </div>
+  <div class="tip-red">⭐ <strong>Marle = uvek ženski oblik!</strong> Bila sam · radila sam · išla sam · gledala sam · slušala sam...</div>
+  <div class="gpr-grid">
+    <div class="gpr-card"><div class="gpr-inf">biti</div><div class="gpr-forms"><span class="gform-m">bio</span><span style="color:var(--mid)">/</span><span class="gform-z">bila</span><span style="color:var(--mid)">/</span><span class="gform-sr">bilo</span></div></div>
+    <div class="gpr-card"><div class="gpr-inf">raditi</div><div class="gpr-forms"><span class="gform-m">radio</span><span style="color:var(--mid)">/</span><span class="gform-z">radila</span><span style="color:var(--mid)">/</span><span class="gform-sr">radilo</span></div></div>
+    <div class="gpr-card"><div class="gpr-inf">ići ⚡</div><div class="gpr-forms"><span class="gform-m">išao</span><span style="color:var(--mid)">/</span><span class="gform-z">išla</span><span style="color:var(--mid)">/</span><span class="gform-sr">išlo</span></div></div>
+    <div class="gpr-card"><div class="gpr-inf">doći ⚡</div><div class="gpr-forms"><span class="gform-m">došao</span><span style="color:var(--mid)">/</span><span class="gform-z">došla</span><span style="color:var(--mid)">/</span><span class="gform-sr">došlo</span></div></div>
+    <div class="gpr-card"><div class="gpr-inf">gledati</div><div class="gpr-forms"><span class="gform-m">gledao</span><span style="color:var(--mid)">/</span><span class="gform-z">gledala</span><span style="color:var(--mid)">/</span><span class="gform-sr">gledalo</span></div></div>
+    <div class="gpr-card"><div class="gpr-inf">slušati</div><div class="gpr-forms"><span class="gform-m">slušao</span><span style="color:var(--mid)">/</span><span class="gform-z">slušala</span><span style="color:var(--mid)">/</span><span class="gform-sr">slušalo</span></div></div>
+    <div class="gpr-card"><div class="gpr-inf">čitati</div><div class="gpr-forms"><span class="gform-m">čitao</span><span style="color:var(--mid)">/</span><span class="gform-z">čitala</span><span style="color:var(--mid)">/</span><span class="gform-sr">čitalo</span></div></div>
+    <div class="gpr-card"><div class="gpr-inf">putovati</div><div class="gpr-forms"><span class="gform-m">putovao</span><span style="color:var(--mid)">/</span><span class="gform-z">putovala</span><span style="color:var(--mid)">/</span><span class="gform-sr">putovalo</span></div></div>
+    <div class="gpr-card"><div class="gpr-inf">govoriti</div><div class="gpr-forms"><span class="gform-m">govorio</span><span style="color:var(--mid)">/</span><span class="gform-z">govorila</span><span style="color:var(--mid)">/</span><span class="gform-sr">govorilo</span></div></div>
+    <div class="gpr-card"><div class="gpr-inf">pevati</div><div class="gpr-forms"><span class="gform-m">pevao</span><span style="color:var(--mid)">/</span><span class="gform-z">pevala</span><span style="color:var(--mid)">/</span><span class="gform-sr">pevalo</span></div></div>
+    <div class="gpr-card"><div class="gpr-inf">voleti</div><div class="gpr-forms"><span class="gform-m">voleo</span><span style="color:var(--mid)">/</span><span class="gform-z">volela</span><span style="color:var(--mid)">/</span><span class="gform-sr">volelo</span></div></div>
+    <div class="gpr-card"><div class="gpr-inf">imati</div><div class="gpr-forms"><span class="gform-m">imao</span><span style="color:var(--mid)">/</span><span class="gform-z">imala</span><span style="color:var(--mid)">/</span><span class="gform-sr">imalo</span></div></div>
+  </div>
+  <div class="tip-gold">⚡ <strong>Nepravilni:</strong> ići → išao/<strong>išla</strong> · doći → došao/<strong>došla</strong> — ove nauči posebno!</div>
+</div>
+
+<!-- 4: LOKATIV -->
+<div class="slide" id="s4">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-purple">📍</div>
+    <div class="sec-hdr-text"><h2>Lokativ — Gde si bila?</h2><p>Predlog "u/na" + lokativ imenice</p></div>
+  </div>
+  <div class="lok-grid">
+    <div class="lok-card" style="background:#EEEDFE"><div class="lok-nom">Beograd</div><div class="lok-lok" style="color:#3C3489">u Beogradu</div></div>
+    <div class="lok-card" style="background:#EEEDFE"><div class="lok-nom">Berlin</div><div class="lok-lok" style="color:#3C3489">u Berlinu</div></div>
+    <div class="lok-card" style="background:#FBEAF0"><div class="lok-nom">Srbija</div><div class="lok-lok" style="color:#72243E">u Srbiji</div></div>
+    <div class="lok-card" style="background:#FBEAF0"><div class="lok-nom">Nemačka</div><div class="lok-lok" style="color:#72243E">u Nemačkoj</div></div>
+    <div class="lok-card" style="background:#FBEAF0"><div class="lok-nom">škola</div><div class="lok-lok" style="color:#72243E">u školi</div></div>
+    <div class="lok-card" style="background:#FBEAF0"><div class="lok-nom">kuća</div><div class="lok-lok" style="color:#72243E">u kući</div></div>
+    <div class="lok-card" style="background:#EBF5FB"><div class="lok-nom">restoran</div><div class="lok-lok" style="color:#1A5276">u restoranu</div></div>
+    <div class="lok-card" style="background:#EBF5FB"><div class="lok-nom">grad</div><div class="lok-lok" style="color:#1A5276">u gradu</div></div>
+    <div class="lok-card" style="background:#E1F5EE"><div class="lok-nom">kafić</div><div class="lok-lok" style="color:#0E6655">u kafiću</div></div>
+    <div class="lok-card" style="background:#E1F5EE"><div class="lok-nom">posao</div><div class="lok-lok" style="color:#0E6655">na poslu</div></div>
+  </div>
+  <div class="card-grid cols2" style="margin-top:1rem">
+    <div class="card">
+      <h3 style="font-size:.95rem">Ženski rod (-a → -i)</h3>
+      <div style="font-size:.88rem;line-height:2;color:var(--dark)">
+        škola → u <strong style="color:#72243E">školi</strong><br>
+        Srbija → u <strong style="color:#72243E">Srbiji</strong><br>
+        kuća → u <strong style="color:#72243E">kući</strong><br>
+        Nemačka → u <strong style="color:#72243E">Nemačkoj</strong>
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:.95rem">Muški rod (+ -u)</h3>
+      <div style="font-size:.88rem;line-height:2;color:var(--dark)">
+        restoran → u <strong style="color:#1A5276">restoranu</strong><br>
+        Berlin → u <strong style="color:#1A5276">Berlinu</strong><br>
+        Beograd → u <strong style="color:#1A5276">Beogradu</strong><br>
+        grad → u <strong style="color:#1A5276">gradu</strong>
+      </div>
+    </div>
+  </div>
+  <div class="tip">🇩🇪 <strong>Paralela sa nema&#269;kim:</strong> "Ich war in Berlin" (Dativ) = "Bila sam u Berlinu" (Lokativ) — ista logika!</div>
+</div>
+
+<!-- 5: TEKST ZA ČITANJE -->
+<div class="slide" id="s5">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-sage">📖</div>
+    <div class="sec-hdr-text"><h2>Tekst za čitanje</h2><p>Prošli vikend u Beogradu · A2 · ~140 reči</p></div>
+  </div>
+  <div class="legend">
+    <span class="leg"><span class="leg-dot" style="background:#ef4444"></span>Perfekat</span>
+    <span class="leg"><span class="leg-dot" style="background:#534AB7"></span>Lokativ</span>
+    <span class="leg"><span class="leg-dot" style="background:#EF9F27"></span>Vreme</span>
+    <span class="leg"><span class="leg-dot" style="background:#1D9E75"></span>Vikend vokabular</span>
+  </div>
+  <div class="trans-toggle">
+    <span style="font-size:.8rem;color:var(--mid);line-height:26px;margin-right:4px">Prevod:</span>
+    <button class="ttbtn" onclick="toggleTrans('en',this)">🇬🇧 English</button>
+    <button class="ttbtn" onclick="toggleTrans('de',this)">🇩🇪 Deutsch</button>
+  </div>
+  <div class="reading-text">
+    <p><span class="hl-time">Prošlog vikenda</span> <span class="hl-perf">bila sam</span> <span class="hl-lok">u Beogradu</span>. <span class="hl-time">U petak uveče</span> <span class="hl-perf">stigla sam</span> avionom i odmah <span class="hl-perf">otišla sam</span> <span class="hl-lok">u kafić</span> na Skadarliji. <span class="hl-perf">Srela sam</span> <span class="hl-voc">prijatelje</span> i <span class="hl-perf">razgovarali smo</span> do kasno.</p>
+    <p><span class="hl-time">U subotu</span> <span class="hl-perf">išla sam</span> <span class="hl-lok">u grad</span> i <span class="hl-perf">posjetila sam</span> Kalemegdan. Vreme <span class="hl-perf">je bilo</span> odlično — <span class="hl-perf">šetala sam</span> satima. <span class="hl-time">Uveče</span> <span class="hl-perf">bili smo</span> <span class="hl-lok">u restoranu</span> i <span class="hl-perf">gledala sam</span> srpski film kod kuće.</p>
+    <p><span class="hl-time">U nedelju</span> <span class="hl-perf">kuvala sam</span> ručak <span class="hl-lok">u kući</span> moje prijateljice Ane. <span class="hl-perf">Slušale smo</span> Voyage i <span class="hl-perf">pevale smo</span> zajedno! <span class="hl-time">Kasno</span> <span class="hl-time">uveče</span> <span class="hl-perf">otišla sam</span> na aerodrom i <span class="hl-perf">vratila sam se</span> <span class="hl-lok">u Berlin</span>.</p>
+    <p>Svaki put kad se <span class="hl-perf">vratim</span> iz Beograda, <span class="hl-perf">nosim</span> tu energiju sa sobom. Srbija je čarobna zemlja! 🌸</p>
+  </div>
+  <div class="trans-block" id="trans-en">
+    <div style="display:flex;gap:.6rem"><span style="font-size:1rem">🇬🇧</span><span>Last weekend I was in Belgrade. On Friday evening I arrived by plane and immediately went to a café on Skadarlija street. I met friends and we talked until late.<br><br>On Saturday I went into the city and visited Kalemegdan. The weather was great — I walked for hours. In the evening we were in a restaurant and I watched a Serbian film at home.<br><br>On Sunday I cooked lunch at my friend Ana's house. We listened to Voyage and sang together! Late in the evening I went to the airport and returned to Berlin.<br><br>Every time I return from Belgrade, I carry that energy with me. Serbia is a magical country! 🌸</span></div>
+  </div>
+  <div class="trans-block" id="trans-de">
+    <div style="display:flex;gap:.6rem"><span style="font-size:1rem">🇩🇪</span><span>Letztes Wochenende war ich in Belgrad. Am Freitagabend kam ich mit dem Flugzeug an und ging sofort in ein Café in der Skadarlija-Straße. Ich traf Freunde und wir haben bis spät geredet.<br><br>Am Samstag ging ich in die Stadt und besuchte Kalemegdan. Das Wetter war toll — ich bin stundenlang spaziert. Am Abend waren wir im Restaurant und ich schaute zu Hause einen serbischen Film.<br><br>Am Sonntag kochte ich das Mittagessen bei meiner Freundin Ana. Wir hörten Voyage und sangen zusammen! Spät am Abend ging ich zum Flughafen und kehrte nach Berlin zurück.<br><br>Jedes Mal, wenn ich aus Belgrad zurückkomme, trage ich diese Energie mit mir. Serbien ist ein magisches Land! 🌸</span></div>
+  </div>
+</div>
+
+<!-- 6: VEŽBA 1 — PERFEKAT -->
+<div class="slide" id="s6">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-berry">✏️</div>
+    <div class="sec-hdr-text"><h2>Vežba 1 — Perfekat!</h2><p>Stavi glagol u perfekat — pazi na rod!</p></div>
+  </div>
+  <div class="ex-block">
+    <div class="ex-title">Stavi glagol u perfekat za dato lice</div>
+    <div class="ex-instr">Svi subjekti su ženskog roda osim označenih!</div>
+    <div id="fill-form">
+      <div class="fill-row"><span class="fill-num">1.</span><span class="fill-sent">Ja (Ž) <input class="fill-blank" id="f1" data-ans="bila sam" placeholder="___"> u Beogradu prošle nedelje.</span></div>
+      <div class="fill-row"><span class="fill-num">2.</span><span class="fill-sent">On <input class="fill-blank" id="f2" data-ans="gledao je" placeholder="___"> srpski film sinoć.</span></div>
+      <div class="fill-row"><span class="fill-num">3.</span><span class="fill-sent">Mi <input class="fill-blank" id="f3" data-ans="putovali smo" placeholder="___"> u Srbiju leti.</span></div>
+      <div class="fill-row"><span class="fill-num">4.</span><span class="fill-sent">Ona <input class="fill-blank" id="f4" data-ans="slušala je" placeholder="___"> Voyage ceo dan.</span></div>
+      <div class="fill-row"><span class="fill-num">5.</span><span class="fill-sent">Ja (Ž) <input class="fill-blank" id="f5" data-ans="išla sam" placeholder="___"> u restoran sa prijateljicom.</span></div>
+      <div class="fill-row"><span class="fill-num">6.</span><span class="fill-sent">Oni <input class="fill-blank" id="f6" data-ans="bili su" placeholder="___"> u kafiću na Skadarliji.</span></div>
+      <div class="fill-row"><span class="fill-num">7.</span><span class="fill-sent">Ona <input class="fill-blank" id="f7" data-ans="čitala je" placeholder="___"> srpski tekst juče.</span></div>
+    </div>
+    <button class="check-btn" onclick="checkFill()">Proveri odgovore ✓</button>
+    <div class="feedback" id="fill-fb"></div>
+  </div>
+</div>
+
+<!-- 7: VEŽBA 2 — LOKATIV -->
+<div class="slide" id="s7">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-purple">📍</div>
+    <div class="sec-hdr-text"><h2>Vežba 2 — Lokativ!</h2><p>Spoji gde si bila — nominativ → lokativ</p></div>
+  </div>
+  <div class="ex-block">
+    <div class="ex-title">Klikni nominativ, pa tačan lokativ</div>
+    <div class="match-grid">
+      <div class="match-col" id="match-sr"></div>
+      <div class="match-col" id="match-en"></div>
+    </div>
+    <div class="match-score" id="match-score">0 / 8 spojeno</div>
+  </div>
+  <div class="tip">💡 <strong>Trik:</strong> Ženski rod -a → -i (škola→školi). Muški +u (Berlin→Berlinu).</div>
+</div>
+
+<!-- 8: VEŽBA 3 — PREVEDI -->
+<div class="slide" id="s8">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-sage">🌍</div>
+    <div class="sec-hdr-text"><h2>Vežba 3 — Prevedi u perfekat!</h2><p>Otkrij odgovor kad si gotova</p></div>
+  </div>
+  <div class="ex-block">
+    <div class="ex-title">Prevedi rečenice na srpski (perfekat!)</div>
+    <div class="ex-instr">Svi subjekti su ženskog roda osim označenih — pazi na GPR!</div>
+    <div id="transl-form">
+      <div class="transl-row"><div class="transl-en">1. I (Ž) was in Belgrade last week.</div><input class="transl-input" id="t1" placeholder="Bila sam..."><div class="feedback" id="tf1" style="margin-top:.4rem;font-size:.83rem;padding:.5rem .8rem"></div></div>
+      <div class="transl-row"><div class="transl-en">2. She listened to Serbian music all day.</div><input class="transl-input" id="t2" placeholder="Ona je..."><div class="feedback" id="tf2" style="margin-top:.4rem;font-size:.83rem;padding:.5rem .8rem"></div></div>
+      <div class="transl-row"><div class="transl-en">3. We went to a restaurant in the city.</div><input class="transl-input" id="t3" placeholder="Išli smo..."><div class="feedback" id="tf3" style="margin-top:.4rem;font-size:.83rem;padding:.5rem .8rem"></div></div>
+      <div class="transl-row"><div class="transl-en">4. I (Ž) spent the weekend with my sister.</div><input class="transl-input" id="t4" placeholder="Provela sam..."><div class="feedback" id="tf4" style="margin-top:.4rem;font-size:.83rem;padding:.5rem .8rem"></div></div>
+      <div class="transl-row"><div class="transl-en">5. She was not at home yesterday.</div><input class="transl-input" id="t5" placeholder="Ona nije..."><div class="feedback" id="tf5" style="margin-top:.4rem;font-size:.83rem;padding:.5rem .8rem"></div></div>
+    </div>
+    <button class="check-btn" onclick="revealAll()">Otkrij sve odgovore</button>
+  </div>
+</div>
+
+<!-- 9: KRAJ -->
+<div class="slide" id="s9">
+  <div class="congrats">
+    <div class="big">Sjajno! 🚀</div>
+    <p>Nedelja 5 završena — Faza 2 je počela!</p>
+    <ul class="done-list">
+      <li><span class="chk">✓</span>Mini-test Faze 1 — znala si!</li>
+      <li><span class="chk">✓</span>Perfekat formula: BITI + GPR</li>
+      <li><span class="chk">✓</span>GPR ženski rod -la (bila sam, radila sam, išla sam...)</li>
+      <li><span class="chk">✓</span>12 GPR glagola — uključujući nepravilne (išla, došla)</li>
+      <li><span class="chk">✓</span>Negacija: nisam bila / nije gledala</li>
+      <li><span class="chk">✓</span>Lokativ — 10 mesta (u Beogradu, u školi, u restoranu...)</li>
+      <li><span class="chk">✓</span>Vikend vokabular u kontekstu prošlosti</li>
+    </ul>
+    <div style="margin-top:1.5rem;padding:1rem 1.25rem;background:var(--cream2);border-radius:12px;max-width:420px;margin-left:auto;margin-right:auto">
+      <div style="font-size:.85rem;font-weight:500;color:var(--berry);margin-bottom:.5rem">Za kod kuće 🏠</div>
+      <div style="font-size:.83rem;color:var(--mid);line-height:1.7">📱 Anki Set 1-5 svaki dan (100 kartica!)<br>🎵 Zdravko Čolić — "Sjajan dan"<br>— tra\u017ei glagole u perfektu u tekstu!<br>✍️ Napi\u0161i 7-8 rečenica o svom prošlom vikendu</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end stage -->
+
+<div class="bottom-nav">
+  <button class="nav-btn nav-prev" id="btn-prev" onclick="go(-1)">← Nazad</button>
+  <span class="slide-counter" id="counter">1 / 10</span>
+  <button class="nav-btn nav-next" id="btn-next" onclick="go(1)">Napred →</button>
+</div>
+
+<script>
+const TOTAL = 10;
+let cur = 0;
+const slides = Array.from(document.querySelectorAll('.slide'));
+const pbar = document.getElementById('pbar');
+const counter = document.getElementById('counter');
+const stepper = document.getElementById('stepper');
+
+for(let i=0;i<TOTAL;i++){
+  const d=document.createElement('button');
+  d.className='step-dot'+(i===0?' active':'');
+  d.onclick=(function(idx){return function(){jumpTo(idx);};})(i);
+  stepper.appendChild(d);
+}
+function updateUI(){
+  slides.forEach((s,i)=>s.classList.toggle('active',i===cur));
+  stepper.querySelectorAll('.step-dot').forEach((d,i)=>{d.classList.toggle('active',i===cur);d.classList.toggle('done',i<cur);});
+  pbar.style.width=((cur/(TOTAL-1))*100)+'%';
+  counter.textContent=(cur+1)+' / '+TOTAL;
+  document.getElementById('btn-prev').style.visibility=cur===0?'hidden':'visible';
+  document.getElementById('btn-next').textContent=cur===TOTAL-1?'🌸 Završi':'Napred →';
+  window.scrollTo(0,0);
+}
+function go(dir){cur=Math.max(0,Math.min(TOTAL-1,cur+dir));updateUI();}
+function jumpTo(i){cur=i;updateUI();}
+updateUI();
+
+/* MINI-TEST */
+function checkMT(){
+  const ids=['mt1','mt2','mt3','mt4','mt5','mt6','mt7','mt8','mt9','mt10','mt11'];
+  let ok=0;
+  ids.forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el) return;
+    const v=el.value.trim().toLowerCase();
+    const a=el.dataset.ans.toLowerCase();
+    if(v===a){el.style.borderColor='var(--sage)';el.style.color='#0F6E56';ok++;}
+    else if(v){el.style.borderColor='#E24B4A';el.style.color='#991b1b';}
+  });
+  const total=ids.length;
+  const fb=document.getElementById('mt-fb');
+  fb.className='feedback show '+(ok>=9?'ok':'nope');
+  const msg=ok===total?`Savršeno! Svi odgovori tačni! Faza 1 = SAVLADANA! 🏆`:
+    ok>=7?`${ok}/${total} tačno — Odlično! Faza 1 je čvrsta baza. ✓`:
+    `${ok}/${total} tačno. Pogledaj tačne odgovore: 1-sam/imam · 2-Moja/je · 3-govori · 4-julu · 5-jer · 6-brata/sestru · 7-Njihova · 8-na`;
+  fb.textContent=msg;
+}
+
+/* FILL EXERCISE */
+function checkFill(){
+  const inputs=document.querySelectorAll('#fill-form .fill-blank');
+  let ok=0;
+  inputs.forEach(inp=>{
+    const v=inp.value.trim().toLowerCase();
+    const a=inp.dataset.ans.toLowerCase();
+    if(v===a){inp.classList.add('correct');inp.classList.remove('wrong');ok++;}
+    else if(v){inp.classList.add('wrong');inp.classList.remove('correct');}
+  });
+  const fb=document.getElementById('fill-fb');
+  fb.className='feedback show '+(ok===inputs.length?'ok':'nope');
+  fb.textContent=ok===inputs.length?'Bravo! Svi perfekti tačni! 🌟':ok+' / '+inputs.length+' tačno. Pazi na GPR ženski rod (-la)!';
+}
+
+/* MATCH — lokativ */
+const matchPairs=[
+  ['Beograd','u Beogradu'],['Berlin','u Berlinu'],['Srbija','u Srbiji'],
+  ['škola','u školi'],['restoran','u restoranu'],['grad','u gradu'],
+  ['kafić','u kafiću'],['Nemačka','u Nemačkoj']
+];
+let selSr=null,selEn=null,matched=0;
+function shuffle(a){return[...a].sort(()=>Math.random()-.5);}
+shuffle([...matchPairs]).forEach(([s,e])=>{
+  const d=document.createElement('div');
+  d.className='match-item';d.textContent=s;d.dataset.key=s;
+  d.onclick=function(){pickSr(d);};
+  document.getElementById('match-sr').appendChild(d);
+});
+shuffle([...matchPairs]).forEach(([s,e])=>{
+  const d=document.createElement('div');
+  d.className='match-item';d.textContent=e;d.dataset.key=s;
+  d.onclick=function(){pickEn(d);};
+  document.getElementById('match-en').appendChild(d);
+});
+function pickSr(el){if(el.classList.contains('matched'))return;document.querySelectorAll('#match-sr .match-item').forEach(e=>e.classList.remove('selected'));el.classList.add('selected');selSr=el;if(selEn)tryMatch();}
+function pickEn(el){if(el.classList.contains('matched'))return;document.querySelectorAll('#match-en .match-item').forEach(e=>e.classList.remove('selected'));el.classList.add('selected');selEn=el;if(selSr)tryMatch();}
+function tryMatch(){
+  if(selSr.dataset.key===selEn.dataset.key){
+    [selSr,selEn].forEach(e=>{e.classList.add('matched');e.classList.remove('selected');});
+    matched++;
+    document.getElementById('match-score').textContent=matched===8?'🎉 Sve spojeno! Lokativ savladan!':matched+' / 8 spojeno';
+  } else {
+    [selSr,selEn].forEach(e=>{e.classList.add('wrong-flash');setTimeout(()=>e.classList.remove('wrong-flash','selected'),600);});
+  }
+  selSr=null;selEn=null;
+}
+
+/* TRANSLATE */
+const answers={
+  t1:'Bila sam u Beogradu prošle nedelje.',
+  t2:'Ona je slušala srpsku muziku ceo dan.',
+  t3:'Išli smo u restoran u gradu.',
+  t4:'Provela sam vikend sa sestrom.',
+  t5:'Ona nije bila kod kuće juče.'
+};
+function revealAll(){
+  Object.entries(answers).forEach(([id,ans])=>{
+    const inp=document.getElementById(id);
+    inp.value='';inp.className='transl-input revealed';
+    const fb=document.getElementById('tf'+id.slice(1));
+    fb.className='feedback show ok';fb.textContent='✓ '+ans;
+  });
+}
+function toggleTrans(lang,btn){
+  const el=document.getElementById('trans-'+lang);
+  const isOn=el.classList.toggle('show');
+  btn.classList.toggle('on',isOn);
+}
+</script>
+</body>
+</html>
