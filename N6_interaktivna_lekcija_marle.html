@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Srpski · Nedelja 6 · Marle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--berry:#6D2E46;--rose:#A26769;--cream:#F5ECD7;--cream2:#EDE0CC;--gold:#C4975A;--sage:#7A9E87;--dark:#2C1810;--mid:#7A5C5C;--white:#fff;--blush:#E8C4C4}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);min-height:100vh;color:var(--dark)}
+.top-bar{background:var(--berry);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:52px;position:sticky;top:0;z-index:100}
+.top-bar-title{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--cream)}
+.week{font-size:.75rem;color:#E8C4C4;font-weight:300}
+.progress-bar{height:3px;background:var(--gold);transition:width .4s ease;position:absolute;bottom:0;left:0}
+.stepper{display:flex;gap:6px;align-items:center}
+.step-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:all .2s;border:none;padding:0}
+.step-dot.active{background:var(--gold);transform:scale(1.3)}
+.step-dot.done{background:var(--sage)}
+.stage{max-width:860px;margin:0 auto;padding:1.5rem 1rem 5rem}
+.slide{display:none;animation:fadeIn .35s ease}
+.slide.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.slide-hero{text-align:center;padding:2.5rem 1rem}
+.slide-hero .num{font-size:3.5rem;font-family:'Playfair Display',serif;color:var(--berry);line-height:1;margin-bottom:.5rem}
+.slide-hero h2{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:600;color:var(--dark);margin-bottom:.6rem}
+.slide-hero p{color:var(--mid);font-size:1rem;line-height:1.7;max-width:520px;margin:0 auto 1.5rem}
+.hero-chips{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center}
+.chip{padding:.3rem .8rem;border-radius:20px;font-size:.8rem;font-weight:500}
+.chip-teal{background:#E1F5EE;color:#0F6E56}.chip-purple{background:#EEEDFE;color:#3C3489}
+.chip-pink{background:#FBEAF0;color:#72243E}.chip-amber{background:#FAEEDA;color:#633806}
+.chip-blue{background:#EBF5FB;color:#1A5276}
+.card{background:var(--white);border-radius:14px;padding:1.2rem 1.3rem;border:1px solid var(--blush)}
+.card h3{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--berry);margin-bottom:.7rem}
+.card-grid{display:grid;gap:1rem;margin-top:1rem}
+.card-grid.cols2{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.card-grid.cols3{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.ptable{width:100%;border-collapse:collapse;margin:.75rem 0;font-size:.87rem}
+.ptable th{background:var(--berry);color:var(--cream);padding:.5rem .8rem;text-align:left;font-weight:500;font-size:.77rem}
+.ptable td{padding:.45rem .8rem;border-bottom:1px solid var(--cream2)}
+.ptable tr:nth-child(even) td{background:var(--cream2)}
+.ptable .vb{font-weight:700;color:var(--berry)}
+.ptable .vbm{font-weight:700;color:#1d4ed8}.ptable .vbz{font-weight:700;color:#991b1b}.ptable .vbs{font-weight:700;color:#0E6655}
+.ptable .ex{color:var(--mid);font-size:.81rem;font-style:italic}
+.reading-text{background:var(--white);border-radius:14px;padding:1.5rem 1.7rem;border:1px solid var(--blush);font-size:1.05rem;line-height:1.9}
+.reading-text p{margin-bottom:1rem}
+.reading-text p:last-child{margin-bottom:0}
+.hl-gpr{font-weight:600;color:#991b1b;border-bottom:2px solid #fca5a5}
+.hl-adj{font-weight:600;color:#3C3489;border-bottom:2px solid #AFA9EC}
+.hl-voc{font-weight:600;color:#0F6E56;border-bottom:2px solid #5DCAA5}
+.hl-lok{font-weight:600;color:#633806;border-bottom:2px solid #EF9F27}
+.trans-toggle{margin:1rem 0 .5rem;display:flex;gap:.5rem;flex-wrap:wrap}
+.ttbtn{font-size:.78rem;padding:.3rem .75rem;border-radius:20px;border:1px solid var(--blush);background:transparent;color:var(--mid);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+.ttbtn:hover,.ttbtn.on{background:var(--berry);color:var(--cream);border-color:var(--berry)}
+.trans-block{background:var(--cream2);border-radius:10px;padding:1rem 1.2rem;margin-top:.5rem;font-size:.9rem;line-height:1.7;color:var(--mid);display:none}
+.trans-block.show{display:block}
+.ex-block{background:var(--white);border-radius:14px;padding:1.4rem 1.5rem;border:1px solid var(--blush);margin-bottom:1rem}
+.ex-title{font-family:'Playfair Display',serif;font-size:1rem;color:var(--berry);margin-bottom:.3rem}
+.ex-instr{font-size:.85rem;color:var(--mid);margin-bottom:1rem;font-style:italic}
+.fill-row{display:grid;grid-template-columns:28px 1fr;gap:.5rem;align-items:baseline;margin-bottom:.65rem;font-size:.93rem}
+.fill-num{color:var(--rose);font-weight:500;text-align:right}
+.fill-blank{display:inline-block;border:none;border-bottom:2px solid var(--blush);width:120px;text-align:center;font-family:'DM Sans',sans-serif;font-size:.88rem;color:var(--dark);background:transparent;outline:none;transition:border-color .2s}
+.fill-blank:focus{border-color:var(--berry)}
+.fill-blank.correct{border-color:var(--sage);color:#0F6E56}
+.fill-blank.wrong{border-color:#E24B4A;color:#E24B4A}
+.check-btn{margin-top:1rem;padding:.5rem 1.2rem;background:var(--berry);color:var(--cream);border:none;border-radius:20px;font-family:'DM Sans',sans-serif;font-size:.85rem;cursor:pointer;transition:opacity .15s}
+.check-btn:hover{opacity:.85}
+.feedback{margin-top:.75rem;font-size:.85rem;padding:.6rem 1rem;border-radius:8px;display:none}
+.feedback.show{display:block}
+.feedback.ok{background:#E1F5EE;color:#0F6E56}
+.feedback.nope{background:#FCEBEB;color:#A32D2D}
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.match-col{display:flex;flex-direction:column;gap:.5rem}
+.match-item{padding:.5rem .9rem;border-radius:8px;border:1.5px solid var(--blush);background:var(--cream2);font-size:.87rem;cursor:pointer;transition:all .2s;user-select:none;line-height:1.4}
+.match-item.selected{background:var(--berry);color:var(--cream);border-color:var(--berry)}
+.match-item.matched{background:var(--sage);color:var(--white);border-color:var(--sage);cursor:default}
+.match-item.wrong-flash{background:#FCEBEB;border-color:#E24B4A}
+.match-score{font-size:.85rem;color:var(--mid);margin-top:.75rem}
+.transl-row{margin-bottom:.9rem}
+.transl-en{font-size:.9rem;color:var(--mid);margin-bottom:.3rem}
+.transl-input{width:100%;padding:.45rem .7rem;border:1.5px solid var(--blush);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.9rem;background:transparent;color:var(--dark);outline:none;transition:border-color .2s}
+.transl-input:focus{border-color:var(--berry)}
+.transl-input.revealed{border-color:var(--sage);background:#E1F5EE;color:#0F6E56}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--cream2);padding:.7rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
+.nav-btn{padding:.55rem 1.3rem;border-radius:22px;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:500;cursor:pointer;transition:all .18s;border:none}
+.nav-prev{background:var(--cream2);color:var(--mid)}.nav-prev:hover{background:var(--blush)}
+.nav-next{background:var(--berry);color:var(--cream)}.nav-next:hover{opacity:.88}
+.slide-counter{font-size:.82rem;color:var(--mid)}
+.sec-hdr{display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem}
+.sec-icon{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;color:var(--white)}
+.bg-berry{background:var(--berry)}.bg-sage{background:var(--sage)}.bg-gold{background:var(--gold)}
+.bg-rose{background:var(--rose)}.bg-blue{background:#1d4ed8}.bg-purple{background:#534AB7}
+.bg-teal{background:#0E6655}.bg-red{background:#991b1b}
+.sec-hdr-text h2{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--dark)}
+.sec-hdr-text p{font-size:.83rem;color:var(--mid)}
+.tip{background:#EEEDFE;border-left:3px solid #7F77DD;border-radius:0 10px 10px 0;padding:.7rem 1rem;font-size:.85rem;color:#3C3489;margin:1rem 0;line-height:1.6}
+.tip-gold{background:#FAEEDA;border-left:3px solid #EF9F27;border-radius:0 10px 10px 0;padding:.7rem 1rem;font-size:.85rem;color:#633806;margin:1rem 0;line-height:1.6}
+.tip-green{background:#EAFAF1;border-left:3px solid #1D9E75;border-radius:0 10px 10px 0;padding:.7rem 1rem;font-size:.85rem;color:#0E6655;margin:1rem 0;line-height:1.6}
+.tip-red{background:#FCEBEB;border-left:3px solid #E24B4A;border-radius:0 10px 10px 0;padding:.7rem 1rem;font-size:.85rem;color:#991b1b;margin:1rem 0;line-height:1.6}
+.legend{display:flex;flex-wrap:wrap;gap:.6rem;margin:.5rem 0 1rem;align-items:center}
+.leg{display:flex;align-items:center;gap:4px;font-size:.77rem;color:var(--mid)}
+.leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.gpr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.55rem;margin:.75rem 0}
+.gpr-card{background:var(--white);border:1px solid var(--cream2);border-radius:10px;padding:.6rem .9rem}
+.gpr-inf{font-size:.78rem;color:var(--mid);margin-bottom:.25rem}
+.gpr-forms{display:flex;gap:.4rem;font-size:.88rem;align-items:center}
+.gform-m{color:#1d4ed8;font-weight:500}.gform-z{color:#991b1b;font-weight:700;font-size:.95rem}.gform-s{color:#0E6655;font-weight:500}
+.adj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.6rem;margin:.75rem 0}
+.adj-card{border-radius:12px;padding:.75rem 1rem;border:1px solid rgba(0,0,0,.07)}
+.adj-en{font-size:.77rem;color:var(--mid);margin-bottom:.2rem}
+.adj-forms{display:flex;gap:.35rem;flex-wrap:wrap}
+.af-m{background:#dbeafe;color:#1d4ed8;font-size:.82rem;font-weight:600;padding:2px 8px;border-radius:8px}
+.af-z{background:#fce7f3;color:#9d174d;font-size:.82rem;font-weight:600;padding:2px 8px;border-radius:8px}
+.af-sr{background:#d1fae5;color:#065f46;font-size:.82rem;font-weight:600;padding:2px 8px;border-radius:8px}
+.adj-ex{font-size:.8rem;color:var(--mid);font-style:italic;margin-top:.35rem}
+/* Adjective quiz */
+.adj-q{display:flex;align-items:center;gap:.7rem;margin-bottom:.7rem;flex-wrap:wrap}
+.adj-word{font-weight:500;font-size:.95rem;min-width:80px}
+.adj-opts{display:flex;gap:.4rem;flex-wrap:wrap}
+.aopt{padding:.25rem .7rem;border-radius:14px;border:1.5px solid var(--blush);background:transparent;font-size:.83rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.aopt:hover{border-color:var(--berry)}
+.aopt.sel{background:var(--berry);color:var(--cream);border-color:var(--berry)}
+.aopt.correct{background:#E1F5EE;color:#0F6E56;border-color:#0F6E56}
+.aopt.wrong{background:#FCEBEB;color:#991b1b;border-color:#E24B4A}
+.congrats{text-align:center;padding:3rem 1rem}
+.congrats .big{font-family:'Playfair Display',serif;font-size:2.5rem;color:var(--berry);margin-bottom:.5rem}
+.congrats p{color:var(--mid);font-size:1rem;max-width:440px;margin:0 auto 1.5rem}
+.done-list{list-style:none;max-width:420px;margin:0 auto;text-align:left}
+.done-list li{display:flex;gap:.6rem;align-items:flex-start;margin-bottom:.55rem;font-size:.9rem}
+.done-list .chk{color:var(--sage);font-size:1rem;flex-shrink:0;margin-top:2px}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div>
+    <div class="top-bar-title">Srpski · Nedelja 6 · Faza 2</div>
+    <div class="week">Nepravilni GPR · Opisni pridevi · Putovanje</div>
+  </div>
+  <div class="stepper" id="stepper"></div>
+  <div class="progress-bar" id="pbar"></div>
+</div>
+
+<div class="stage">
+
+<!-- 0: WELCOME -->
+<div class="slide active" id="s0">
+  <div class="slide-hero">
+    <div class="num">6</div>
+    <h2>Opisuješ svet! 🌍</h2>
+    <p>Sada naučavaš da opišeš šta si videla, jela i doživela — sa <strong>opisnim pridevima</strong> i <strong>nepravilnim perfekatom</strong>. Tvoje priče postaju bogate!</p>
+    <div class="hero-chips">
+      <span class="chip chip-pink">⏪ Nepravilni GPR (išla, videla, jela...)</span>
+      <span class="chip chip-purple">🎨 Opisni pridevi + slaganje</span>
+      <span class="chip chip-teal">✈️ Putovanje vokabular</span>
+      <span class="chip chip-amber">🏛️ Opisivanje mesta</span>
+    </div>
+  </div>
+  <div class="tip">🇩🇪 <strong>Nemačka paralela za prideve:</strong> "ein schöner Stadt / eine schöne Kirche" = "lep grad / lepa crkva" — potpuno ista logika slaganja!</div>
+  <div class="tip-red">⭐ <strong>Uvek ženski rod!</strong> išla sam · videla sam · jela sam · pila sam · kupila sam</div>
+</div>
+
+<!-- 1: NEPRAVILNI GPR -->
+<div class="slide" id="s1">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-red">⏪</div>
+    <div class="sec-hdr-text"><h2>Nepravilni glagoli — GPR</h2><p>Posebni oblici koje treba naučiti napamet</p></div>
+  </div>
+  <div class="tip-red">⭐ <strong>Marle = uvek ženski oblik!</strong> Svaki GPR koji govoriš o sebi završava na <strong>-la</strong></div>
+  <div class="gpr-grid">
+    <div class="gpr-card"><div class="gpr-inf">ići (to go)</div><div class="gpr-forms"><span class="gform-m">išao</span><span style="color:var(--mid)">/</span><span class="gform-z">išla ⭐</span><span style="color:var(--mid)">/</span><span class="gform-s">išlo</span></div></div>
+    <div class="gpr-card"><div class="gpr-inf">doći (to come)</div><div class="gpr-forms"><span class="gform-m">došao</span><span style="color:var(--mid)">/</span><span class="gform-z">došla ⭐</span><span style="color:var(--mid)">/</span><span class="gform-s">došlo</span></div></div>
+    <div class="gpr-card"><div class="gpr-inf">otići (to leave)</div><div class="gpr-forms"><span class="gform-m">otišao</span><span style="color:var(--mid)">/</span><span class="gform-z">otišla ⭐</span><span style="color:var(--mid)">/</span><span class="gform-s">otišlo</span></div></div>
+    <div class="gpr-card"><div class="gpr-inf">videti (to see)</div><div class="gpr-forms"><span class="gform-m">video</span><span style="color:var(--mid)">/</span><span class="gform-z">videla ⭐</span><span style="color:var(--mid)">/</span><span class="gform-s">videlo</span></div></div>
+    <div class="gpr-card"><div class="gpr-inf">jesti (to eat)</div><div class="gpr-forms"><span class="gform-m">jeo</span><span style="color:var(--mid)">/</span><span class="gform-z">jela ⭐</span><span style="color:var(--mid)">/</span><span class="gform-s">jelo</span></div></div>
+    <div class="gpr-card"><div class="gpr-inf">piti (to drink)</div><div class="gpr-forms"><span class="gform-m">pio</span><span style="color:var(--mid)">/</span><span class="gform-z">pila ⭐</span><span style="color:var(--mid)">/</span><span class="gform-s">pilo</span></div></div>
+    <div class="gpr-card"><div class="gpr-inf">kupiti (to buy)</div><div class="gpr-forms"><span class="gform-m">kupio</span><span style="color:var(--mid)">/</span><span class="gform-z">kupila ⭐</span><span style="color:var(--mid)">/</span><span class="gform-s">kupilo</span></div></div>
+    <div class="gpr-card"><div class="gpr-inf">naći (to find)</div><div class="gpr-forms"><span class="gform-m">našao</span><span style="color:var(--mid)">/</span><span class="gform-z">našla ⭐</span><span style="color:var(--mid)">/</span><span class="gform-s">našlo</span></div></div>
+    <div class="gpr-card"><div class="gpr-inf">moći (to be able)</div><div class="gpr-forms"><span class="gform-m">mogao</span><span style="color:var(--mid)">/</span><span class="gform-z">mogla ⭐</span><span style="color:var(--mid)">/</span><span class="gform-s">moglo</span></div></div>
+    <div class="gpr-card"><div class="gpr-inf">hteti (to want)</div><div class="gpr-forms"><span class="gform-m">hteo</span><span style="color:var(--mid)">/</span><span class="gform-z">htela ⭐</span><span style="color:var(--mid)">/</span><span class="gform-s">htelo</span></div></div>
+    <div class="gpr-card"><div class="gpr-inf">živeti (to live)</div><div class="gpr-forms"><span class="gform-m">živeo</span><span style="color:var(--mid)">/</span><span class="gform-z">živela ⭐</span><span style="color:var(--mid)">/</span><span class="gform-s">živelo</span></div></div>
+    <div class="gpr-card"><div class="gpr-inf">voleti (to love)</div><div class="gpr-forms"><span class="gform-m">voleo</span><span style="color:var(--mid)">/</span><span class="gform-z">volela ⭐</span><span style="color:var(--mid)">/</span><span class="gform-s">volelo</span></div></div>
+  </div>
+  <div class="tip-gold">💡 <strong>Trik za pamćenje:</strong> ići/doći/otići/naći — svi od istog korena, isti obrazac (šao/šla). Nauči jednom, znaš sve!</div>
+</div>
+
+<!-- 2: OPISNI PRIDEVI -->
+<div class="slide" id="s2">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-purple">🎨</div>
+    <div class="sec-hdr-text"><h2>Opisni pridevi — Slaganje sa rodom</h2><p>Pridev MORA pratiti rod imenice!</p></div>
+  </div>
+  <div class="adj-grid">
+    <div class="adj-card" style="background:#EBF5FB">
+      <div class="adj-en">beautiful</div>
+      <div class="adj-forms"><span class="af-m">lep</span><span class="af-z">lepa</span><span class="af-sr">lepo</span></div>
+      <div class="adj-ex">lep grad · lepa crkva · lepo more</div>
+    </div>
+    <div class="adj-card" style="background:#EAFAF1">
+      <div class="adj-en">good</div>
+      <div class="adj-forms"><span class="af-m">dobar</span><span class="af-z">dobra</span><span class="af-sr">dobro</span></div>
+      <div class="adj-ex">dobar hotel · dobra hrana · dobro vino</div>
+    </div>
+    <div class="adj-card" style="background:#EBF5FB">
+      <div class="adj-en">big / large</div>
+      <div class="adj-forms"><span class="af-m">velik</span><span class="af-z">velika</span><span class="af-sr">veliko</span></div>
+      <div class="adj-ex">velik grad · velika kuća · veliko more</div>
+    </div>
+    <div class="adj-card" style="background:#FAEEDA">
+      <div class="adj-en">old</div>
+      <div class="adj-forms"><span class="af-m">star</span><span class="af-z">stara</span><span class="af-sr">staro</span></div>
+      <div class="adj-ex">star grad · stara crkva · staro vino</div>
+    </div>
+    <div class="adj-card" style="background:#EAFAF1">
+      <div class="adj-en">small</div>
+      <div class="adj-forms"><span class="af-m">mali</span><span class="af-z">mala</span><span class="af-sr">malo</span></div>
+      <div class="adj-ex">mali kafić · mala soba · malo selo</div>
+    </div>
+    <div class="adj-card" style="background:#EBF5FB">
+      <div class="adj-en">new</div>
+      <div class="adj-forms"><span class="af-m">nov</span><span class="af-z">nova</span><span class="af-sr">novo</span></div>
+      <div class="adj-ex">nov hotel · nova pesma · novo mesto</div>
+    </div>
+    <div class="adj-card" style="background:#FBEAF0">
+      <div class="adj-en">cheap</div>
+      <div class="adj-forms"><span class="af-m">jeftin</span><span class="af-z">jeftina</span><span class="af-sr">jeftino</span></div>
+      <div class="adj-ex">jeftin let · jeftina karta · jeftino piće</div>
+    </div>
+    <div class="adj-card" style="background:#FCEBEB">
+      <div class="adj-en">expensive</div>
+      <div class="adj-forms"><span class="af-m">skup</span><span class="af-z">skupa</span><span class="af-sr">skupo</span></div>
+      <div class="adj-ex">skup restoran · skupa hrana · skupo vino</div>
+    </div>
+    <div class="adj-card" style="background:#EBF5FB">
+      <div class="adj-en">warm / hot</div>
+      <div class="adj-forms"><span class="af-m">topao</span><span class="af-z">topla</span><span class="af-sr">toplo</span></div>
+      <div class="adj-ex">topao dan · topla soba · toplo leto</div>
+    </div>
+    <div class="adj-card" style="background:#EEEDFE">
+      <div class="adj-en">interesting</div>
+      <div class="adj-forms"><span class="af-m">zanimljiv</span><span class="af-z">zanimljiva</span><span class="af-sr">zanimljivo</span></div>
+      <div class="adj-ex">zanimljiv muzej · zanimljiva knjiga</div>
+    </div>
+  </div>
+  <div class="tip">💡 <strong>2 načina upotrebe:</strong> <em>lep grad</em> (pridev ispred — atribut) · <em>Grad je lep / bio lep</em> (pridev iza BITI — predikat). Oba su ispravna!</div>
+</div>
+
+<!-- 3: PUTOVANJE VOKABULAR -->
+<div class="slide" id="s3">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-teal">✈️</div>
+    <div class="sec-hdr-text"><h2>Putovanje — Travel vocabulary</h2><p>Sve što treba za priče o Srbiji, Hrvatskoj i CG</p></div>
+  </div>
+  <div class="card-grid cols2">
+    <div class="card">
+      <h3>🚗 Prevoz i smeštaj</h3>
+      <div style="display:flex;flex-direction:column;gap:.4rem;margin-top:.5rem">
+        <div style="display:flex;justify-content:space-between;padding:.4rem .7rem;background:var(--cream2);border-radius:8px;font-size:.88rem"><strong>avion</strong> <span style="color:var(--mid)">plane · das Flugzeug</span></div>
+        <div style="display:flex;justify-content:space-between;padding:.4rem .7rem;background:var(--white);border:1px solid var(--cream2);border-radius:8px;font-size:.88rem"><strong>aerodrom</strong> <span style="color:var(--mid)">airport · der Flughafen</span></div>
+        <div style="display:flex;justify-content:space-between;padding:.4rem .7rem;background:var(--cream2);border-radius:8px;font-size:.88rem"><strong>voz</strong> <span style="color:var(--mid)">train · der Zug</span></div>
+        <div style="display:flex;justify-content:space-between;padding:.4rem .7rem;background:var(--white);border:1px solid var(--cream2);border-radius:8px;font-size:.88rem"><strong>karta (povratna)</strong> <span style="color:var(--mid)">(return) ticket</span></div>
+        <div style="display:flex;justify-content:space-between;padding:.4rem .7rem;background:var(--cream2);border-radius:8px;font-size:.88rem"><strong>hotel</strong> <span style="color:var(--mid)">hotel · das Hotel</span></div>
+        <div style="display:flex;justify-content:space-between;padding:.4rem .7rem;background:var(--white);border:1px solid var(--cream2);border-radius:8px;font-size:.88rem"><strong>soba</strong> <span style="color:var(--mid)">room · das Zimmer (Ž)</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🏛️ Mesta i iskustva</h3>
+      <div style="display:flex;flex-direction:column;gap:.4rem;margin-top:.5rem">
+        <div style="display:flex;justify-content:space-between;padding:.4rem .7rem;background:var(--cream2);border-radius:8px;font-size:.88rem"><strong>muzej</strong> <span style="color:var(--mid)">museum (M)</span></div>
+        <div style="display:flex;justify-content:space-between;padding:.4rem .7rem;background:var(--white);border:1px solid var(--cream2);border-radius:8px;font-size:.88rem"><strong>crkva</strong> <span style="color:var(--mid)">church (Ž)</span></div>
+        <div style="display:flex;justify-content:space-between;padding:.4rem .7rem;background:var(--cream2);border-radius:8px;font-size:.88rem"><strong>plaža</strong> <span style="color:var(--mid)">beach (Ž)</span></div>
+        <div style="display:flex;justify-content:space-between;padding:.4rem .7rem;background:var(--white);border:1px solid var(--cream2);border-radius:8px;font-size:.88rem"><strong>more</strong> <span style="color:var(--mid)">sea (Sr)</span></div>
+        <div style="display:flex;justify-content:space-between;padding:.4rem .7rem;background:var(--cream2);border-radius:8px;font-size:.88rem"><strong>planina</strong> <span style="color:var(--mid)">mountain (Ž)</span></div>
+        <div style="display:flex;justify-content:space-between;padding:.4rem .7rem;background:var(--white);border:1px solid var(--cream2);border-radius:8px;font-size:.88rem"><strong>suvenir</strong> <span style="color:var(--mid)">souvenir (M)</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="tip-gold">🍽️ <strong>Srpska hrana:</strong> ćevapi (ćevap M) · pljeskavica (Ž) · burek (M) · rakija (Ž) · šljivovica (Ž) · kajmak (M)</div>
+  <div class="tip">💡 <strong>Primer rečenice:</strong> "Letela sam avionom. Hotel je bio velik i jeftin. Jela sam odlične ćevape i videla staru crkvu." — Perfekat + pridev + putovanje!</div>
+</div>
+
+<!-- 4: TEKST ZA ČITANJE -->
+<div class="slide" id="s4">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-sage">📖</div>
+    <div class="sec-hdr-text"><h2>Tekst za čitanje</h2><p>Putovanje u Crnu Goru · A2 · ~150 reči</p></div>
+  </div>
+  <div class="legend">
+    <span class="leg"><span class="leg-dot" style="background:#ef4444"></span>Nepravilni GPR</span>
+    <span class="leg"><span class="leg-dot" style="background:#534AB7"></span>Opisni pridev</span>
+    <span class="leg"><span class="leg-dot" style="background:#1D9E75"></span>Putovanje vok.</span>
+    <span class="leg"><span class="leg-dot" style="background:#EF9F27"></span>Lokativ</span>
+  </div>
+  <div class="trans-toggle">
+    <span style="font-size:.8rem;color:var(--mid);line-height:26px;margin-right:4px">Prevod:</span>
+    <button class="ttbtn" onclick="toggleTrans('en',this)">🇬🇧 English</button>
+    <button class="ttbtn" onclick="toggleTrans('de',this)">🇩🇪 Deutsch</button>
+  </div>
+  <div class="reading-text">
+    <p>Pro\u0161log leta <span class="hl-gpr">letela sam</span> <span class="hl-voc">avionom</span> u Crnu Goru. <span class="hl-voc">Aerodrom</span> je bio <span class="hl-adj">mali</span> ali prijatan. <span class="hl-gpr">Našla sam</span> <span class="hl-adj">jeftin</span> <span class="hl-voc">hotel</span> <span class="hl-lok">u centru grada</span>. <span class="hl-voc">Soba</span> je bila <span class="hl-adj">mala</span> ali <span class="hl-adj">čista</span> i <span class="hl-adj">lepa</span>.</p>
+    <p>Prvog dana <span class="hl-gpr">išla sam</span> na <span class="hl-voc">plažu</span>. <span class="hl-voc">More</span> je bilo <span class="hl-adj">toplo</span> i <span class="hl-adj">plavo</span> — <span class="hl-gpr">volela sam</span> svaki trenutak! Uveče <span class="hl-gpr">jela sam</span> <span class="hl-adj">svežu</span> ribu <span class="hl-lok">u malom restoranu</span> na obali. Hrana je bila <span class="hl-adj">odlična</span>.</p>
+    <p>Drugog dana <span class="hl-gpr">posetila sam</span> <span class="hl-adj">stari</span> <span class="hl-voc">grad</span> Kotor. <span class="hl-gpr">Videla sam</span> <span class="hl-adj">stare</span> <span class="hl-voc">crkve</span> i <span class="hl-adj">uzak</span> <span class="hl-adj">srednji</span> vek ulice. <span class="hl-gpr">Kupila sam</span> <span class="hl-voc">suvenire</span> za porodicu i <span class="hl-gpr">pila sam</span> <span class="hl-adj">dobar</span> <span class="hl-adj">crni</span> čaj <span class="hl-lok">u kafiću</span>.</p>
+    <p>Crna Gora je <span class="hl-adj">predivna</span> zemlja! <span class="hl-gpr">Htela sam</span> da ostanem duže, ali <span class="hl-gpr">morala sam</span> da se vratim <span class="hl-lok">u Berlin</span>. Definitivno se <span class="hl-gpr">vraćam</span>! 🌊</p>
+  </div>
+  <div class="trans-block" id="trans-en">
+    <div style="display:flex;gap:.6rem"><span style="font-size:1rem">🇬🇧</span><span>Last summer I flew by plane to Montenegro. The airport was small but pleasant. I found a cheap hotel in the city centre. The room was small but clean and beautiful.<br><br>On the first day I went to the beach. The sea was warm and blue — I loved every moment! In the evening I ate fresh fish in a small restaurant on the shore. The food was excellent.<br><br>On the second day I visited the old city of Kotor. I saw old churches and narrow medieval streets. I bought souvenirs for my family and drank good black tea in a café.<br><br>Montenegro is a beautiful country! I wanted to stay longer, but I had to return to Berlin. I'm definitely going back! 🌊</span></div>
+  </div>
+  <div class="trans-block" id="trans-de">
+    <div style="display:flex;gap:.6rem"><span style="font-size:1rem">🇩🇪</span><span>Letzten Sommer flog ich mit dem Flugzeug nach Montenegro. Der Flughafen war klein aber angenehm. Ich fand ein günstiges Hotel im Stadtzentrum. Das Zimmer war klein, aber sauber und schön.<br><br>Am ersten Tag ging ich an den Strand. Das Meer war warm und blau — ich liebte jeden Moment! Am Abend aß ich frischen Fisch in einem kleinen Restaurant am Ufer. Das Essen war ausgezeichnet.<br><br>Am zweiten Tag besuchte ich die Altstadt Kotor. Ich sah alte Kirchen und enge mittelalterliche Gassen. Ich kaufte Souvenirs für meine Familie und trank guten schwarzen Tee in einem Café.<br><br>Montenegro ist ein wunderschönes Land! Ich wollte länger bleiben, aber ich musste nach Berlin zurückkehren. Ich komme definitiv wieder! 🌊</span></div>
+  </div>
+</div>
+
+<!-- 5: VEŽBA 1 — NEPRAVILNI GPR -->
+<div class="slide" id="s5">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-berry">✏️</div>
+    <div class="sec-hdr-text"><h2>Vežba 1 — Nepravilni perfekat!</h2><p>Ženski rod GPR — završava na -la</p></div>
+  </div>
+  <div class="ex-block">
+    <div class="ex-title">Stavi glagol u perfekat ženskog roda</div>
+    <div class="ex-instr">Svi subjekti su Ž osim br. 3 i 6 (mi = mešovito → -li)</div>
+    <div id="fill-form">
+      <div class="fill-row"><span class="fill-num">1.</span><span class="fill-sent">Ja <input class="fill-blank" id="f1" data-ans="išla sam" placeholder="___"> avionom iz Berlina.</span></div>
+      <div class="fill-row"><span class="fill-num">2.</span><span class="fill-sent">Ona <input class="fill-blank" id="f2" data-ans="videla je" placeholder="___"> predivan zalazak sunca.</span></div>
+      <div class="fill-row"><span class="fill-num">3.</span><span class="fill-sent">Mi <input class="fill-blank" id="f3" data-ans="jeli smo" placeholder="___"> odlične ćevape u Beogradu.</span></div>
+      <div class="fill-row"><span class="fill-num">4.</span><span class="fill-sent">Ja <input class="fill-blank" id="f4" data-ans="kupila sam" placeholder="___"> suvenire za porodicu.</span></div>
+      <div class="fill-row"><span class="fill-num">5.</span><span class="fill-sent">Ona <input class="fill-blank" id="f5" data-ans="pila je" placeholder="___"> dobro vino u restoranu.</span></div>
+      <div class="fill-row"><span class="fill-num">6.</span><span class="fill-sent">Mi <input class="fill-blank" id="f6" data-ans="našli smo" placeholder="___"> jeftin hotel blizu centra.</span></div>
+      <div class="fill-row"><span class="fill-num">7.</span><span class="fill-sent">Ja <input class="fill-blank" id="f7" data-ans="htela sam" placeholder="___"> da ostanem duže.</span></div>
+    </div>
+    <button class="check-btn" onclick="checkFill()">Proveri odgovore ✓</button>
+    <div class="feedback" id="fill-fb"></div>
+  </div>
+</div>
+
+<!-- 6: VEŽBA 2 — OPISNI PRIDEVI QUIZ -->
+<div class="slide" id="s6">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-purple">🎨</div>
+    <div class="sec-hdr-text"><h2>Vežba 2 — Koji oblik prideva?</h2><p>Klikni tačan oblik za dati rod imenice</p></div>
+  </div>
+  <div class="ex-block">
+    <div class="ex-title">Izaberi tačan oblik opisnog prideva</div>
+    <div class="ex-instr">Pazi na rod imenice u zagradi!</div>
+    <div id="adj-form"></div>
+    <button class="check-btn" onclick="checkAdj()">Proveri ✓</button>
+    <div class="feedback" id="adj-fb"></div>
+  </div>
+</div>
+
+<!-- 7: VEŽBA 3 — SPOJI GPR -->
+<div class="slide" id="s7">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-gold">🔗</div>
+    <div class="sec-hdr-text"><h2>Vežba 3 — Spoji glagol i GPR!</h2><p>Infinitiv ↔ ženski oblik GPR</p></div>
+  </div>
+  <div class="ex-block">
+    <div class="ex-title">Klikni infinitiv, pa tačan ženski GPR</div>
+    <div class="match-grid">
+      <div class="match-col" id="match-sr"></div>
+      <div class="match-col" id="match-en"></div>
+    </div>
+    <div class="match-score" id="match-score">0 / 8 spojeno</div>
+  </div>
+  <div class="tip-red">⭐ Svi desni odgovori su ženski rod (-la). Uvek!</div>
+</div>
+
+<!-- 8: VEŽBA 4 — PREVEDI -->
+<div class="slide" id="s8">
+  <div class="sec-hdr">
+    <div class="sec-icon bg-sage">🌍</div>
+    <div class="sec-hdr-text"><h2>Vežba 4 — Prevedi na srpski</h2><p>Perfekat + opisni pridevi zajedno!</p></div>
+  </div>
+  <div class="ex-block">
+    <div class="ex-title">Prevedi rečenice na srpski</div>
+    <div class="ex-instr">Fokus: GPR ženski rod + pridev slaže se sa imenicom</div>
+    <div id="transl-form">
+      <div class="transl-row"><div class="transl-en">1. I (Ž) travelled by plane to Belgrade.</div><input class="transl-input" id="t1" placeholder="Putovala sam..."><div class="feedback" id="tf1" style="margin-top:.4rem;font-size:.83rem;padding:.5rem .8rem"></div></div>
+      <div class="transl-row"><div class="transl-en">2. The city was big and beautiful.</div><input class="transl-input" id="t2" placeholder="Grad je bio..."><div class="feedback" id="tf2" style="margin-top:.4rem;font-size:.83rem;padding:.5rem .8rem"></div></div>
+      <div class="transl-row"><div class="transl-en">3. I (Ž) ate excellent food in an old restaurant.</div><input class="transl-input" id="t3" placeholder="Jela sam..."><div class="feedback" id="tf3" style="margin-top:.4rem;font-size:.83rem;padding:.5rem .8rem"></div></div>
+      <div class="transl-row"><div class="transl-en">4. She visited a beautiful old church.</div><input class="transl-input" id="t4" placeholder="Posetila je..."><div class="feedback" id="tf4" style="margin-top:.4rem;font-size:.83rem;padding:.5rem .8rem"></div></div>
+      <div class="transl-row"><div class="transl-en">5. The sea was warm and the beach was small.</div><input class="transl-input" id="t5" placeholder="More je bilo..."><div class="feedback" id="tf5" style="margin-top:.4rem;font-size:.83rem;padding:.5rem .8rem"></div></div>
+    </div>
+    <button class="check-btn" onclick="revealAll()">Otkrij sve odgovore</button>
+  </div>
+</div>
+
+<!-- 9: KRAJ -->
+<div class="slide" id="s9">
+  <div class="congrats">
+    <div class="big">Odlično! 🌍</div>
+    <p>Nedelja 6 završena — sada možeš da opišeš celo putovanje!</p>
+    <ul class="done-list">
+      <li><span class="chk">✓</span>12 nepravilnih GPR — ženski rod napamet</li>
+      <li><span class="chk">✓</span>Posebno: išla · videla · jela · pila · kupila · mogla · htela</li>
+      <li><span class="chk">✓</span>10 opisnih prideva sa slaganjem M/Ž/Sr</li>
+      <li><span class="chk">✓</span>Atributivna i predikatska upotreba prideva</li>
+      <li><span class="chk">✓</span>Putovanje vokabular — avion, hotel, crkva, plaža, more...</li>
+      <li><span class="chk">✓</span>Kombinovane rečenice: perfekat + pridev + veznik</li>
+    </ul>
+    <div style="margin-top:1.5rem;padding:1rem 1.25rem;background:var(--cream2);border-radius:12px;max-width:420px;margin-left:auto;margin-right:auto">
+      <div style="font-size:.85rem;font-weight:500;color:var(--berry);margin-bottom:.5rem">Za kod kuće 🏠</div>
+      <div style="font-size:.83rem;color:var(--mid);line-height:1.7">📱 Anki Set 1-6 svaki dan (120 kartica!)<br>🎵 Đorđe Balašević — "Računajte na nas"<br>— podvuci opisne prideve u tekstu!<br>✍️ Napiši 8-10 rečenica o putovanju u region</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end stage -->
+
+<div class="bottom-nav">
+  <button class="nav-btn nav-prev" id="btn-prev" onclick="go(-1)">← Nazad</button>
+  <span class="slide-counter" id="counter">1 / 10</span>
+  <button class="nav-btn nav-next" id="btn-next" onclick="go(1)">Napred →</button>
+</div>
+
+<script>
+const TOTAL=10;let cur=0;
+const slides=Array.from(document.querySelectorAll('.slide'));
+const pbar=document.getElementById('pbar'),counter=document.getElementById('counter'),stepper=document.getElementById('stepper');
+for(let i=0;i<TOTAL;i++){const d=document.createElement('button');d.className='step-dot'+(i===0?' active':'');d.onclick=(function(idx){return function(){jumpTo(idx);};})(i);stepper.appendChild(d);}
+function updateUI(){slides.forEach((s,i)=>s.classList.toggle('active',i===cur));stepper.querySelectorAll('.step-dot').forEach((d,i)=>{d.classList.toggle('active',i===cur);d.classList.toggle('done',i<cur);});pbar.style.width=((cur/(TOTAL-1))*100)+'%';counter.textContent=(cur+1)+' / '+TOTAL;document.getElementById('btn-prev').style.visibility=cur===0?'hidden':'visible';document.getElementById('btn-next').textContent=cur===TOTAL-1?'🌸 Završi':'Napred →';window.scrollTo(0,0);}
+function go(dir){cur=Math.max(0,Math.min(TOTAL-1,cur+dir));updateUI();}
+function jumpTo(i){cur=i;updateUI();}
+updateUI();
+
+/* FILL */
+function checkFill(){const inputs=document.querySelectorAll('#fill-form .fill-blank');let ok=0;inputs.forEach(inp=>{const v=inp.value.trim().toLowerCase(),a=inp.dataset.ans.toLowerCase();if(v===a){inp.classList.add('correct');inp.classList.remove('wrong');ok++;}else if(v){inp.classList.add('wrong');inp.classList.remove('correct');}});const fb=document.getElementById('fill-fb');fb.className='feedback show '+(ok===inputs.length?'ok':'nope');fb.textContent=ok===inputs.length?'Savršeno! Svi nepravilni GPR tačni! 🌟':ok+' / '+inputs.length+' tačno. Pazi na ženski rod (-la)!';}
+
+/* ADJ QUIZ */
+const adjQs=[
+  {noun:'grad (M)',adj:'lep',opts:['lep','lepa','lepo'],ans:'lep'},
+  {noun:'crkva (Ž)',adj:'star',opts:['star','stara','staro'],ans:'stara'},
+  {noun:'more (Sr)',adj:'topao',opts:['topao','topla','toplo'],ans:'toplo'},
+  {noun:'hotel (M)',adj:'dobar',opts:['dobar','dobra','dobro'],ans:'dobar'},
+  {noun:'hrana (Ž)',adj:'dobar',opts:['dobar','dobra','dobro'],ans:'dobra'},
+  {noun:'soba (Ž)',adj:'mali',opts:['mali','mala','malo'],ans:'mala'},
+  {noun:'vino (Sr)',adj:'skup',opts:['skup','skupa','skupo'],ans:'skupo'},
+  {noun:'karta (Ž)',adj:'jeftin',opts:['jeftin','jeftina','jeftino'],ans:'jeftina'},
+];
+const adjForm=document.getElementById('adj-form');
+adjQs.forEach((q,i)=>{
+  const row=document.createElement('div');row.className='adj-q';
+  row.innerHTML='<span class="adj-word">'+(i+1)+'. '+q.noun+'</span><span style="font-size:.82rem;color:var(--mid)">+ '+q.adj+' →</span>';
+  const opts=document.createElement('div');opts.className='adj-opts';
+  q.opts.forEach(opt=>{
+    const btn=document.createElement('button');btn.className='aopt';btn.textContent=opt;btn.dataset.val=opt;btn.dataset.ans=q.ans;
+    btn.onclick=function(){opts.querySelectorAll('.aopt').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');};
+    opts.appendChild(btn);
+  });
+  row.appendChild(opts);adjForm.appendChild(row);
+});
+function checkAdj(){let ok=0;adjQs.forEach((q,i)=>{const row=adjForm.children[i];const sel=row.querySelector('.aopt.sel');if(sel){if(sel.dataset.val===q.ans){sel.classList.add('correct');ok++;}else{sel.classList.add('wrong');}}});const fb=document.getElementById('adj-fb');fb.className='feedback show '+(ok===adjQs.length?'ok':'nope');fb.textContent=ok===adjQs.length?'Bravo! Sva slaganja tačna! 🎨':ok+' / '+adjQs.length+' tačno.';}
+
+/* MATCH — infinitiv ↔ GPR Ž */
+const matchPairs=[['ići','išla'],['doći','došla'],['videti','videla'],['jesti','jela'],['piti','pila'],['kupiti','kupila'],['naći','našla'],['hteti','htela']];
+let selSr=null,selEn=null,matched=0;
+function shuffle(a){return[...a].sort(()=>Math.random()-.5);}
+shuffle([...matchPairs]).forEach(([s,e])=>{const d=document.createElement('div');d.className='match-item';d.textContent=s;d.dataset.key=s;d.onclick=function(){pickSr(d);};document.getElementById('match-sr').appendChild(d);});
+shuffle([...matchPairs]).forEach(([s,e])=>{const d=document.createElement('div');d.className='match-item';d.textContent=e;d.dataset.key=s;d.onclick=function(){pickEn(d);};document.getElementById('match-en').appendChild(d);});
+function pickSr(el){if(el.classList.contains('matched'))return;document.querySelectorAll('#match-sr .match-item').forEach(e=>e.classList.remove('selected'));el.classList.add('selected');selSr=el;if(selEn)tryMatch();}
+function pickEn(el){if(el.classList.contains('matched'))return;document.querySelectorAll('#match-en .match-item').forEach(e=>e.classList.remove('selected'));el.classList.add('selected');selEn=el;if(selSr)tryMatch();}
+function tryMatch(){if(selSr.dataset.key===selEn.dataset.key){[selSr,selEn].forEach(e=>{e.classList.add('matched');e.classList.remove('selected');});matched++;document.getElementById('match-score').textContent=matched===8?'🎉 Sve spojeno! GPR savladan!':matched+' / 8 spojeno';}else{[selSr,selEn].forEach(e=>{e.classList.add('wrong-flash');setTimeout(()=>e.classList.remove('wrong-flash','selected'),600);});}selSr=null;selEn=null;}
+
+/* TRANSLATE */
+const answers={t1:'Putovala sam avionom u Beograd.',t2:'Grad je bio velik i lep.',t3:'Jela sam odličnu hranu u starom restoranu.',t4:'Posetila je lepu staru crkvu.',t5:'More je bilo toplo a plaža je bila mala.'};
+function revealAll(){Object.entries(answers).forEach(([id,ans])=>{const inp=document.getElementById(id);inp.value='';inp.className='transl-input revealed';const fb=document.getElementById('tf'+id.slice(1));fb.className='feedback show ok';fb.textContent='✓ '+ans;});}
+function toggleTrans(lang,btn){const el=document.getElementById('trans-'+lang);const isOn=el.classList.toggle('show');btn.classList.toggle('on',isOn);}
+</script>
+</body>
+</html>
